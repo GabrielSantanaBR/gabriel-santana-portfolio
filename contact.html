@@ -20,18 +20,14 @@
       <input type="hidden" name="_subject" value="Novo briefing pelo portfólio — Gabriel Santana"/>
       <input type="hidden" name="_template" value="table"/>
       <input type="hidden" name="_captcha" value="true"/>
+      <input type="hidden" name="_url" value="https://gabrielsantanabr.github.io/gabriel-santana-portfolio/contact.html"/>
       <input type="hidden" name="_next" value="https://gabrielsantanabr.github.io/gabriel-santana-portfolio/thanks.html"/>
       <input class="honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true"/>
 
       <div class="field"><label for="name">Seu nome</label><input id="name" name="Nome" autocomplete="name" maxlength="80" placeholder="Como posso te chamar?" required/></div>
       <div class="field"><label for="service">Projeto</label><select id="service" name="Projeto" required><option value="">Selecione uma opção</option><option value="Site institucional">Site institucional</option><option value="Site com painel interno">Site com painel interno</option><option value="Sistema financeiro">Sistema financeiro</option><option value="Planilha inteligente / automação">Planilha inteligente / automação</option><option value="Dashboard / análise de dados">Dashboard / análise de dados</option><option value="API / integração">API / integração</option><option value="Sistema personalizado">Sistema personalizado</option><option value="Outro projeto">Outro projeto</option></select></div>
       <div class="field"><label for="company">Empresa ou organização <span class="optional">(opcional)</span></label><input id="company" name="Empresa ou organização" maxlength="100" placeholder="Nome do negócio, organização ou projeto"/></div>
-
-      <div class="field-row">
-        <div class="field"><label for="contact-method">Como prefere o retorno?</label><select id="contact-method" name="Meio de contato" required><option value="">Selecione</option><option>E-mail</option><option>WhatsApp</option><option>Telefone</option><option>LinkedIn</option></select></div>
-        <div class="field"><label for="contact-value">Seu contato</label><input id="contact-value" name="Contato para retorno" maxlength="120" placeholder="E-mail, número ou perfil" required/></div>
-      </div>
-
+      <div class="field-row"><div class="field"><label for="contact-method">Como prefere o retorno?</label><select id="contact-method" name="Meio de contato" required><option value="">Selecione</option><option>E-mail</option><option>WhatsApp</option><option>Telefone</option><option>LinkedIn</option></select></div><div class="field"><label for="contact-value">Seu contato</label><input id="contact-value" name="Contato para retorno" maxlength="120" placeholder="E-mail, número ou perfil" required/></div></div>
       <div class="field"><label for="budget">Quanto pretende investir?</label><select id="budget" name="Orçamento pretendido" required><option value="">Selecione uma faixa</option><option>Até R$ 500</option><option>R$ 500 a R$ 1.000</option><option>R$ 1.000 a R$ 2.500</option><option>R$ 2.500 a R$ 5.000</option><option>R$ 5.000 a R$ 10.000</option><option>Acima de R$ 10.000</option><option>Quero receber uma estimativa primeiro</option></select></div>
       <div class="field"><label for="message">Descrição do projeto</label><textarea id="message" name="Descrição" minlength="30" maxlength="2500" placeholder="Explique o que acontece hoje, quem usaria a solução e o resultado que você gostaria de alcançar." required></textarea><span class="field-help">Quanto mais contexto você enviar, melhor consigo avaliar o escopo.</span></div>
       <button class="button primary submit-button" type="submit">Enviar briefing por e-mail</button>
