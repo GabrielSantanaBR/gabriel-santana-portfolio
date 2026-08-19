@@ -1,26 +1,26 @@
 # Gabriel Santana — Portfolio
 
-Portfólio profissional de Gabriel Bezerra de Santana Rego, com foco em desenvolvimento de software, dados, automação e inteligência artificial.
-
-## Objetivo
-
-Este repositório reúne uma apresentação navegável dos principais projetos, separando soluções construídas a partir de problemas reais de projetos técnicos criados para estudo, experimentação e aprofundamento de habilidades.
+Portfólio profissional com foco em **Dados, desenvolvimento de software, automação e IA**.
 
 ## Projetos em destaque
 
-- **[Finance Manager](https://github.com/GabrielSantanaBR/finance-manager)** — edição pública e genérica de um sistema financeiro em Django.
+- **[Finance Manager](https://github.com/GabrielSantanaBR/finance-manager)** — versão pública e genérica de um sistema financeiro em Django com regras de negócio, permissões, relatórios e auditoria.
+- **[Pricing & Sales Manager](https://github.com/GabrielSantanaBR/bakery-manager)** — case anonimizado de precificação e análise comercial com custos, margem, vendas multicanal e dashboard. Inclui uma planilha demonstrativa com dados fictícios.
 - **[Institutional Site Template](https://github.com/GabrielSantanaBR/institutional-site-template)** — template institucional full-stack com conteúdo dinâmico e arquitetura administrativa.
-- **[CSV Sales Analyzer](https://github.com/GabrielSantanaBR/csv-sales-analyzer)** — análise de vendas com Python, Pandas, exportações e visualizações.
-- **[Project Nomad](https://github.com/GabrielSantanaBR/project-nomad)** — projeto técnico de software em evolução.
-- **[Bakery Manager](https://github.com/GabrielSantanaBR/bakery-manager)** — projeto voltado a organização e gestão de negócio.
+- **[CSV Sales Analyzer](https://github.com/GabrielSantanaBR/csv-sales-analyzer)** — fluxo de análise de vendas com Python, Pandas, exportações e visualizações.
+- **[URL Shortener API](https://github.com/GabrielSantanaBR/url-shortener-api)** — API REST com FastAPI, SQLite, validação e documentação OpenAPI.
+
+## Critério do portfólio
+
+Projetos derivados de trabalhos ou necessidades reais são publicados apenas em versões genéricas e anonimizadas. Exercícios de cursos, forks e repositórios de terceiros não são tratados como projetos principais.
 
 ## Tecnologias destacadas
 
-Python, Django, SQL, PostgreSQL, Pandas, JavaScript/TypeScript, React, Next.js, HTML, CSS, Git e GitHub.
+Python, SQL, Django, FastAPI, PostgreSQL, SQLite, Pandas, Excel, OpenPyXL, JavaScript/TypeScript, React, Next.js, HTML, CSS, Git e GitHub.
 
 ## Publicação
 
-O portfólio é estático e não possui dependências externas obrigatórias. O repositório contém um workflow em `.github/workflows/pages.yml` para publicação automática no GitHub Pages a partir da branch `main`.
+O site é estático e possui workflow de GitHub Pages em `.github/workflows/pages.yml`, publicado a partir da branch `main`.
 
 ## Contato
 
