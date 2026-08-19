@@ -98,10 +98,46 @@ if (contactForm) {
   const serviceMap = {site:'Site institucional','site-panel':'Site com painel interno',finance:'Sistema financeiro',spreadsheet:'Planilha inteligente / automação',data:'Dashboard / análise de dados',api:'API / integração',custom:'Sistema personalizado',other:'Outro projeto'};
   if (serviceMap[params.get('service')]) serviceField.value = serviceMap[params.get('service')];
   if (params.get('project')) messageField.value = `Tenho interesse em um projeto semelhante ao ${params.get('project')}. `;
+
   const method = document.getElementById('contact-method');
   const value = document.getElementById('contact-value');
   method.addEventListener('change', () => {
     const placeholders = {'E-mail':'seuemail@exemplo.com','WhatsApp':'(DDD) 00000-0000','Telefone':'(DDD) 00000-0000','LinkedIn':'linkedin.com/in/seu-perfil'};
     value.placeholder = placeholders[method.value] || 'E-mail, número ou perfil';
+  });
+
+  contactForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!contactForm.reportValidity()) return;
+
+    const button = contactForm.querySelector('button[type="submit"]');
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Enviando...';
+
+    try {
+      const formData = new FormData(contactForm);
+      formData.set('_captcha', 'false');
+      formData.delete('_next');
+      const response = await fetch('https://formsubmit.co/ajax/gabrielbsantana61@gmail.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success === 'false' || result.success === false) throw new Error('FormSubmit rejected the request');
+      window.location.href = 'thanks.html';
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = originalText;
+      let errorBox = document.getElementById('form-error');
+      if (!errorBox) {
+        errorBox = document.createElement('p');
+        errorBox.id = 'form-error';
+        errorBox.className = 'form-error';
+        button.insertAdjacentElement('afterend', errorBox);
+      }
+      errorBox.textContent = 'Não foi possível enviar agora. Tente novamente em alguns minutos.';
+    }
   });
 }
