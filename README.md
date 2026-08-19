@@ -4,20 +4,25 @@ Portfólio profissional de Gabriel Bezerra de Santana Rego, com foco em desenvol
 
 ## Objetivo
 
-Este repositório reúne uma apresentação navegável dos principais projetos, separando soluções construídas para problemas reais de projetos técnicos criados para estudo, experimentação e aprofundamento de habilidades.
+Este repositório reúne uma apresentação navegável dos principais projetos, separando soluções construídas a partir de problemas reais de projetos técnicos criados para estudo, experimentação e aprofundamento de habilidades.
 
 ## Projetos em destaque
 
-- **Finance Manager** — sistema web de gestão financeira com Django, PostgreSQL, aprovações, relatórios e dashboards.
-- **Institutional Site Template** — template institucional full-stack com conteúdo dinâmico e painel administrativo.
-- **CSV Sales Analyzer** — análise de vendas com Python, Pandas, exportações e visualizações.
-- **Project Nomad** — projeto técnico de software em evolução.
-- **Bakery Manager** — solução voltada a organização e gestão de negócio.
+- **[Finance Manager](https://github.com/GabrielSantanaBR/finance-manager)** — edição pública e genérica de um sistema financeiro em Django.
+- **[Institutional Site Template](https://github.com/GabrielSantanaBR/institutional-site-template)** — template institucional full-stack com conteúdo dinâmico e arquitetura administrativa.
+- **[CSV Sales Analyzer](https://github.com/GabrielSantanaBR/csv-sales-analyzer)** — análise de vendas com Python, Pandas, exportações e visualizações.
+- **[Project Nomad](https://github.com/GabrielSantanaBR/project-nomad)** — projeto técnico de software em evolução.
+- **[Bakery Manager](https://github.com/GabrielSantanaBR/bakery-manager)** — projeto voltado a organização e gestão de negócio.
 
 ## Tecnologias destacadas
 
-Python, Django, SQL, PostgreSQL, Pandas, JavaScript/TypeScript, HTML, CSS, Git e GitHub.
+Python, Django, SQL, PostgreSQL, Pandas, JavaScript/TypeScript, React, Next.js, HTML, CSS, Git e GitHub.
 
-## Estrutura
+## Publicação
 
-O site é estático e não possui dependências externas obrigatórias. Basta abrir `index.html` ou publicar o repositório com GitHub Pages/Cloudflare Pages.
+O portfólio é estático e não possui dependências externas obrigatórias. O repositório contém um workflow em `.github/workflows/pages.yml` para publicação automática no GitHub Pages a partir da branch `main`.
+
+## Contato
+
+- [GitHub](https://github.com/GabrielSantanaBR)
+- [LinkedIn](https://www.linkedin.com/in/gabriel-santana-b3654622a/)
