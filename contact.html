@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta name="description" content="Envie um briefing de projeto para Gabriel Santana."/>
   <meta name="referrer" content="strict-origin-when-cross-origin"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; form-action https://formsubmit.co; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self' https://formsubmit.co; form-action https://formsubmit.co; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"/>
   <title>Contato — Gabriel Santana</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
   <link rel="stylesheet" href="styles.css"/>
@@ -19,9 +19,8 @@
     <form class="contact-form" id="contact-form" action="https://formsubmit.co/gabrielbsantana61@gmail.com" method="POST">
       <input type="hidden" name="_subject" value="Novo briefing pelo portfólio — Gabriel Santana"/>
       <input type="hidden" name="_template" value="table"/>
-      <input type="hidden" name="_captcha" value="true"/>
+      <input type="hidden" name="_captcha" value="false"/>
       <input type="hidden" name="_url" value="https://gabrielsantanabr.github.io/gabriel-santana-portfolio/contact.html"/>
-      <input type="hidden" name="_next" value="https://gabrielsantanabr.github.io/gabriel-santana-portfolio/thanks.html"/>
       <input class="honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true"/>
 
       <div class="field"><label for="name">Seu nome</label><input id="name" name="Nome" autocomplete="name" maxlength="80" placeholder="Como posso te chamar?" required/></div>
