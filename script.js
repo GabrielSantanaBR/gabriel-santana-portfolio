@@ -1,3 +1,8 @@
+const enhancementStyles = document.createElement('link');
+enhancementStyles.rel = 'stylesheet';
+enhancementStyles.href = 'enhancements.css';
+document.head.appendChild(enhancementStyles);
+
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
 
@@ -44,7 +49,7 @@ const projects = {
   },
   api: {
     title: 'URL Shortener API', status: 'BACKEND', visual: 'api-visual',
-    visualHtml: '<div class="api-preview"><div class="api-header"><b>Rift API / docs</b><span>OpenAPI</span></div><div class="endpoint"><strong>POST</strong><code>/shorten</code></div><pre>{ "url": "https://example.com" }\n→ { "code": "a8F2k" }</pre><div class="endpoint get"><strong>GET</strong><code>/r/{code}</code></div></div>',
+    visualHtml: '<div class="api-preview"><div class="api-header"><b>API / docs</b><span>OpenAPI</span></div><div class="endpoint"><strong>POST</strong><code>/shorten</code></div><pre>{ "url": "https://example.com" }\n→ { "code": "a8F2k" }</pre><div class="endpoint get"><strong>GET</strong><code>/r/{code}</code></div></div>',
     summary: 'API REST para criação e gerenciamento de URLs curtas com persistência, redirecionamento e contagem de acessos.',
     problem: 'Um serviço simples de encurtamento exige mais que gerar uma string: precisa validar entradas, persistir relações, resolver redirecionamentos e expor contratos claros.',
     solution: 'API em FastAPI com modelos Pydantic, armazenamento em SQLite, endpoints de criação, consulta, redirecionamento e exclusão, além de Swagger automático.',
@@ -90,16 +95,13 @@ if (contactForm) {
   const params = new URLSearchParams(window.location.search);
   const serviceField = document.getElementById('service');
   const messageField = document.getElementById('message');
-  const serviceMap = {
-    site:'Site institucional', 'site-panel':'Site com painel interno', finance:'Sistema financeiro', spreadsheet:'Planilha inteligente / automação', data:'Dashboard / análise de dados', api:'API / integração', custom:'Sistema personalizado', other:'Outro projeto'
-  };
+  const serviceMap = {site:'Site institucional','site-panel':'Site com painel interno',finance:'Sistema financeiro',spreadsheet:'Planilha inteligente / automação',data:'Dashboard / análise de dados',api:'API / integração',custom:'Sistema personalizado',other:'Outro projeto'};
   if (serviceMap[params.get('service')]) serviceField.value = serviceMap[params.get('service')];
   if (params.get('project')) messageField.value = `Tenho interesse em um projeto semelhante ao ${params.get('project')}. `;
-
   const method = document.getElementById('contact-method');
   const value = document.getElementById('contact-value');
   method.addEventListener('change', () => {
-    const placeholders = { 'E-mail':'seuemail@exemplo.com', 'WhatsApp':'(DDD) 00000-0000', 'Telefone':'(DDD) 00000-0000', 'LinkedIn':'linkedin.com/in/seu-perfil' };
+    const placeholders = {'E-mail':'seuemail@exemplo.com','WhatsApp':'(DDD) 00000-0000','Telefone':'(DDD) 00000-0000','LinkedIn':'linkedin.com/in/seu-perfil'};
     value.placeholder = placeholders[method.value] || 'E-mail, número ou perfil';
   });
 }
