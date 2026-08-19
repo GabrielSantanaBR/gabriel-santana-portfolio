@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="description" content="Entre em contato para solicitar orçamento de projetos de dados, automação, sites e sistemas."/><title>Contato — Gabriel Santana</title><link rel="stylesheet" href="styles.css"/></head>
+<body>
+<header class="topbar"><a class="brand" href="index.html">GS<span>.</span></a><nav><a href="index.html">Início</a><a href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a class="active" href="contact.html">Contato</a></nav></header>
+<main class="page-shell">
+  <div class="page-header"><div class="breadcrumb"><a href="index.html">Início</a> / Contato</div><p class="eyebrow">CONTATO</p><h1 class="page-title">Explique o que você <span>precisa construir.</span></h1><p class="page-copy">Preencha o formulário abaixo. Ao enviar, uma mensagem organizada será aberta no WhatsApp para você revisar antes de mandar.</p></div>
+  <section class="contact-layout">
+    <div class="contact-copy"><p class="eyebrow">COMO FUNCIONA</p><h2>Uma conversa curta já ajuda a definir o caminho.</h2><p>Não precisa chegar com especificação técnica pronta. O mais importante é explicar o problema, quem vai usar a solução e o que você gostaria de melhorar.</p><div class="contact-points"><div><strong>1. Escolha o tipo</strong><span>Site, sistema, dados, planilha, API ou outro.</span></div><div><strong>2. Conte o objetivo</strong><span>Descreva o processo atual e o resultado esperado.</span></div><div><strong>3. Envie</strong><span>O site prepara a mensagem para você no WhatsApp.</span></div></div></div>
+    <form class="contact-form" id="contact-form">
+      <div class="field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" placeholder="Como posso te chamar?" required/></div>
+      <div class="field"><label for="service">O que você procura?</label><select id="service" name="service" required><option value="">Selecione uma opção</option><option value="site">Site institucional</option><option value="site-panel">Site com painel interno</option><option value="finance">Sistema financeiro</option><option value="spreadsheet">Planilha inteligente / automação</option><option value="data">Dashboard / análise de dados</option><option value="api">API / integração</option><option value="custom">Sistema personalizado</option><option value="other">Outro projeto</option></select></div>
+      <div class="field"><label for="company">Empresa ou organização <span style="color:var(--muted);font-weight:500">(opcional)</span></label><input id="company" name="company" placeholder="Nome do negócio, igreja, projeto..."/></div>
+      <div class="field"><label for="message">Conte um pouco sobre o projeto</label><textarea id="message" name="message" placeholder="Ex.: hoje controlamos tudo por planilha e precisamos de um sistema com login, relatórios e acesso para três pessoas..." required></textarea></div>
+      <div class="field"><label for="budget">Faixa de investimento <span style="color:var(--muted);font-weight:500">(opcional)</span></label><select id="budget" name="budget"><option value="">Prefiro conversar primeiro</option><option>Até R$ 1.000</option><option>R$ 1.000 a R$ 2.500</option><option>R$ 2.500 a R$ 5.000</option><option>Acima de R$ 5.000</option></select></div>
+      <button class="button primary" type="submit">Continuar no WhatsApp</button><p class="form-note">Seu número de telefone não é exibido publicamente nesta página.</p>
+    </form>
+  </section>
+</main>
+<footer>© <span id="year"></span> Gabriel Santana. Data & Software.</footer><script src="script.js"></script>
+</body></html>
