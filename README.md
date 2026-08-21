@@ -17,7 +17,9 @@ Site público: **https://gabrielsantanabr.github.io/gabriel-santana-portfolio/**
 
 ## Direção visual
 
-O site usa um design system próprio em verde escuro, layout responsivo e microinterações. A camada de motion utiliza a biblioteca **Motion**, carregada em versão fixada por CDN, com fallback natural caso o recurso externo não carregue e respeito a `prefers-reduced-motion`.
+O site usa um design system próprio em verde escuro, layout responsivo e microinterações. A camada `video-effects.css` / `effects.js` aplica padrões inspirados em bibliotecas modernas de UI animada — como ambiente tipo galaxy, ripple feedback, spotlight em cards, marquee, tipografia com brilho e microinterações magnéticas — sem transformar o portfólio em uma aplicação React ou adicionar um runtime pesado.
+
+A animação estrutural utiliza **Motion**, carregado em versão fixada por CDN. A implementação respeita `prefers-reduced-motion`, limita a densidade/DPR do canvas, pausa o efeito ambiente quando a aba fica oculta e mantém o conteúdo navegável caso a camada de animação não carregue.
 
 ## Critério do portfólio
 
@@ -27,9 +29,13 @@ Projetos derivados de trabalhos ou necessidades reais são publicados apenas em 
 
 Python, SQL, Django, FastAPI, PostgreSQL, SQLAlchemy, Pandas, scikit-learn, SciPy, Excel, OpenPyXL, JavaScript/TypeScript, React, Next.js, HTML e CSS.
 
+## Segurança
+
+O portfólio é estático e não possui banco de dados ou autenticação própria. A configuração inclui Content Security Policy, validação do formulário, honeypot, tratamento de rate limit e verificações automáticas para referências quebradas, estilos inline e padrões comuns de segredos commitados. Detalhes estão em [`SECURITY.md`](SECURITY.md).
+
 ## Publicação e validação
 
-O site é estático e publicado no GitHub Pages a partir da branch `main`. O workflow em `.github/workflows/pages.yml` valida sintaxe JavaScript, arquivos obrigatórios, referências locais e rotas dos projetos antes do deploy.
+O site é publicado no GitHub Pages a partir da branch `main`. O workflow em `.github/workflows/pages.yml` valida sintaxe JavaScript, arquivos obrigatórios, referências locais, camada visual, padrões de segurança e rotas dos projetos antes do deploy.
 
 ## Contato
 
