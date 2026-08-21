@@ -15,7 +15,70 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate JavaScript syntax
+        run: |
+          node --check script.js
+          node --check --input-type=module < effects.js
+      - name: Validate required files
+        run: |
+          test -f index.html
+          test -f project.html
+          test -f prices.html
+          test -f contact.html
+          test -f thanks.html
+          test -f styles.css
+          test -f script.js
+          test -f effects.js
+          test -f assets/favicon.svg
+      - name: Validate local HTML references
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlsplit
+
+          root = Path('.')
+          broken = []
+
+          class Links(HTMLParser):
+              def __init__(self, source):
+                  super().__init__()
+                  self.source = source
+              def handle_starttag(self, tag, attrs):
+                  for key, value in attrs:
+                      if key not in {'href', 'src'} or not value:
+                          continue
+                      if value.startswith(('http://','https://','#','mailto:','tel:','data:')):
+                          continue
+                      path = urlsplit(value).path
+                      if not path:
+                          continue
+                      target = (self.source.parent / path).resolve()
+                      if not target.exists():
+                          broken.append(f'{self.source}: {value}')
+
+          for html in root.glob('*.html'):
+              parser = Links(html)
+              parser.feed(html.read_text(encoding='utf-8'))
+
+          if broken:
+              raise SystemExit('Broken local references:\n' + '\n'.join(broken))
+          print('Local references OK')
+          PY
+      - name: Check portfolio project routes
+        run: |
+          for id in clientflow decisionforge curtailment finance pricing institutional csv riftpilot; do
+            grep -q "id=$id" index.html
+            grep -q "$id:{" script.js
+          done
+
   deploy:
+    needs: validate
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
