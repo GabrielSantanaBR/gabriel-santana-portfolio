@@ -20,10 +20,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
       - name: Validate JavaScript syntax
         run: |
           node --check script.js
           node --check --input-type=module < effects.js
+
       - name: Validate required files
         run: |
           test -f index.html
@@ -32,9 +34,11 @@ jobs:
           test -f contact.html
           test -f thanks.html
           test -f styles.css
+          test -f video-effects.css
           test -f script.js
           test -f effects.js
           test -f assets/favicon.svg
+
       - name: Validate local HTML references
         run: |
           python - <<'PY'
@@ -70,6 +74,24 @@ jobs:
               raise SystemExit('Broken local references:\n' + '\n'.join(broken))
           print('Local references OK')
           PY
+
+      - name: Validate visual layer
+        run: |
+          grep -q 'video-effects.css' effects.js
+          grep -q 'prefers-reduced-motion' effects.js
+          grep -q 'prefers-reduced-motion' video-effects.css
+          if grep -Rni 'style=' --include='*.html' .; then
+            echo 'Inline style attribute found; keep styling under CSP-safe stylesheets.'
+            exit 1
+          fi
+
+      - name: Check common committed secret patterns
+        run: |
+          if grep -RniE '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[0-9A-Z]{16})' --exclude-dir=.git .; then
+            echo 'Potential secret detected.'
+            exit 1
+          fi
+
       - name: Check portfolio project routes
         run: |
           for id in clientflow decisionforge curtailment finance pricing institutional csv riftpilot; do
