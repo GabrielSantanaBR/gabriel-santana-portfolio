@@ -35,6 +35,7 @@ jobs:
           test -f thanks.html
           test -f styles.css
           test -f video-effects.css
+          test -f portfolio-proof.css
           test -f script.js
           test -f effects.js
           test -f assets/favicon.svg
@@ -78,6 +79,7 @@ jobs:
       - name: Validate visual layer
         run: |
           grep -q 'video-effects.css' effects.js
+          grep -q 'portfolio-proof.css' effects.js
           grep -q 'prefers-reduced-motion' effects.js
           grep -q 'prefers-reduced-motion' video-effects.css
           if grep -Rni 'style=' --include='*.html' .; then
