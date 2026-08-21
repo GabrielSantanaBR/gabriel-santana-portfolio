@@ -3,12 +3,14 @@ import { animate, inView, stagger } from "https://cdn.jsdelivr.net/npm/motion@13
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(pointer:fine)").matches;
 
-/* Load the optional visual layer. The base site stays usable without it. */
-if (!document.querySelector('link[href="video-effects.css"]')) {
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "video-effects.css";
-  document.head.appendChild(link);
+/* Load optional visual layers. The base site stays usable without them. */
+for (const href of ["video-effects.css", "portfolio-proof.css"]) {
+  if (!document.querySelector(`link[href="${href}"]`)) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
+  }
 }
 
 const progress = document.querySelector(".scroll-progress");
@@ -69,8 +71,30 @@ if (trustStrip && !trustStrip.classList.contains("video-marquee")) {
   trustStrip.classList.add("video-marquee");
 }
 
+/* A compact professional-proof block adds context without diluting the project showcase. */
+const servicesSection = document.querySelector(".services-section");
+const processSection = document.querySelector(".process-section");
+if (servicesSection && processSection && !document.querySelector(".profile-proof")) {
+  const profile = document.createElement("section");
+  profile.className = "section profile-proof";
+  profile.setAttribute("aria-labelledby", "profile-proof-title");
+  profile.innerHTML = `
+    <div class="section-head">
+      <div><p class="eyebrow">BASE PROFISSIONAL</p><h2 id="profile-proof-title">Projetos fortes precisam de <span>fundamento.</span></h2></div>
+      <p>Minha base combina dados, desenvolvimento de software, experiência com processos reais e raciocínio quantitativo.</p>
+    </div>
+    <div class="profile-proof-grid">
+      <article class="profile-card"><span>01</span><h3>Dados & IA</h3><p>Formação complementar em Engenharia de Dados, SQL e Análise de Dados, aplicada em projetos de previsão, anomalias, segmentação e decisão.</p><div class="profile-tags"><span>Python</span><span>SQL</span><span>ML</span><span>Pandas</span></div></article>
+      <article class="profile-card"><span>02</span><h3>Software & produto</h3><p>Construção de APIs, sistemas web, bancos de dados e interfaces responsivas com foco em regras de negócio e uso real.</p><div class="profile-tags"><span>Django</span><span>FastAPI</span><span>PostgreSQL</span><span>Web</span></div></article>
+      <article class="profile-card"><span>03</span><h3>Raciocínio quantitativo</h3><p>Histórico de premiações em competições de matemática, trazendo disciplina analítica para modelagem, métricas e resolução de problemas.</p><div class="profile-tags"><span>Modelagem</span><span>Lógica</span><span>Métricas</span></div></article>
+      <article class="profile-card"><span>04</span><h3>Operação real</h3><p>Experiência profissional com organização de dados, documentos e processos, além de soluções construídas para pequenos negócios e organizações.</p><div class="profile-tags"><span>Processos</span><span>Dados</span><span>Automação</span></div></article>
+    </div>
+    <div class="profile-proof-footer"><p>Os projetos destacados são os mais relevantes. Repositórios de estudo e experimentos ficam no GitHub sem competir com os cases principais.</p><a class="button secondary" href="https://github.com/GabrielSantanaBR" target="_blank" rel="noreferrer">Ver GitHub completo <span>↗</span></a></div>`;
+  processSection.parentNode.insertBefore(profile, processSection);
+}
+
 /* Pointer-following spotlight surfaces. */
-const spotlightTargets = document.querySelectorAll(".project-card,.solution-card,.price-card,.detail-card,.contact-form,.showcase-main");
+const spotlightTargets = document.querySelectorAll(".project-card,.solution-card,.profile-card,.price-card,.detail-card,.contact-form,.showcase-main");
 spotlightTargets.forEach((surface) => {
   if (!surface.querySelector(":scope > .interaction-spotlight")) {
     const light = document.createElement("span");
@@ -99,7 +123,7 @@ if (!reduceMotion) {
   }
 
   const revealSelectors = [
-    ".section-head", ".filters", ".project-card", ".solution-card",
+    ".section-head", ".filters", ".project-card", ".solution-card", ".profile-card", ".profile-proof-footer",
     ".process-grid article", ".final-cta", ".price-card", ".note-box",
     ".contact-copy", ".contact-form", ".project-hero", ".detail-card", ".thanks-card"
   ];
