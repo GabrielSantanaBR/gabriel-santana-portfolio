@@ -3,7 +3,7 @@ import { animate, inView, stagger } from "https://cdn.jsdelivr.net/npm/motion@13
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(pointer:fine)").matches;
 
-/* Load the visual layer separately so the base site remains usable if this layer fails. */
+/* Load the optional visual layer. The base site stays usable without it. */
 if (!document.querySelector('link[href="video-effects.css"]')) {
   const link = document.createElement("link");
   link.rel = "stylesheet";
@@ -28,7 +28,7 @@ if (progress) {
   updateProgress();
 }
 
-/* ReactBits-inspired ambient layer, reimplemented in native Canvas/CSS for this static site. */
+/* ReactBits-inspired ambience, reimplemented natively for the static portfolio. */
 const hero = document.querySelector(".hero");
 let galaxyCanvas = null;
 
@@ -53,37 +53,23 @@ if (hero && !hero.querySelector(".video-galaxy")) {
   galaxyCanvas = hero?.querySelector(".video-galaxy") || null;
 }
 
-/* Turn the existing technology strip into a continuous marquee without changing semantic content. */
+/* Seamless technology marquee while preserving the original semantic content. */
 const trustStrip = document.querySelector(".trust-strip");
 if (trustStrip && !trustStrip.classList.contains("video-marquee")) {
   const track = document.createElement("div");
   track.className = "video-marquee-track";
-  const originalNodes = [...trustStrip.childNodes].map((node) => node.cloneNode(true));
+  const originalNodes = [...trustStrip.children].map((node) => node.cloneNode(true));
   originalNodes.forEach((node) => track.appendChild(node));
   originalNodes.forEach((node) => {
     const clone = node.cloneNode(true);
-    if (clone.nodeType === Node.ELEMENT_NODE) clone.setAttribute("aria-hidden", "true");
+    clone.setAttribute("aria-hidden", "true");
     track.appendChild(clone);
   });
   trustStrip.replaceChildren(track);
   trustStrip.classList.add("video-marquee");
 }
 
-/* Design-audit principles from the videos: hierarchy, responsive UX and security. */
-const projectsSection = document.querySelector(".projects-section");
-const servicesSection = document.querySelector(".services-section");
-if (projectsSection && servicesSection && !document.querySelector(".video-principles")) {
-  const principles = document.createElement("section");
-  principles.className = "video-principles";
-  principles.setAttribute("aria-label", "Princípios do projeto");
-  principles.innerHTML = `
-    <article class="video-principle"><span>01</span><strong>Clareza antes de efeito</strong><p>Animação reforça hierarquia, estado e interação; não compete com o conteúdo.</p></article>
-    <article class="video-principle"><span>02</span><strong>Mobile é produto</strong><p>Cards, tipografia, navegação e áreas de toque continuam legíveis em telas pequenas.</p></article>
-    <article class="video-principle"><span>03</span><strong>Segurança faz parte</strong><p>Validação, CSP, anti-spam e dependências reduzidas entram junto com o layout.</p></article>`;
-  servicesSection.parentNode.insertBefore(principles, servicesSection);
-}
-
-/* Spotlight cards */
+/* Pointer-following spotlight surfaces. */
 const spotlightTargets = document.querySelectorAll(".project-card,.solution-card,.price-card,.detail-card,.contact-form,.showcase-main");
 spotlightTargets.forEach((surface) => {
   if (!surface.querySelector(":scope > .interaction-spotlight")) {
@@ -101,7 +87,7 @@ spotlightTargets.forEach((surface) => {
   }
 });
 
-/* Motion: entrance, scroll reveal, project emphasis. */
+/* Motion entrance and scroll reveals. */
 if (!reduceMotion) {
   const heroItems = document.querySelectorAll(".hero-copy-wrap > *, .hero-showcase");
   if (heroItems.length) {
@@ -113,7 +99,7 @@ if (!reduceMotion) {
   }
 
   const revealSelectors = [
-    ".section-head", ".filters", ".project-card", ".video-principle", ".solution-card",
+    ".section-head", ".filters", ".project-card", ".solution-card",
     ".process-grid article", ".final-cta", ".price-card", ".note-box",
     ".contact-copy", ".contact-form", ".project-hero", ".detail-card", ".thanks-card"
   ];
@@ -162,7 +148,7 @@ if (!reduceMotion) {
   });
 }
 
-/* Lightweight galaxy: capped particle count, capped DPR, pauses when tab is hidden. */
+/* Lightweight galaxy: capped particle count/DPR and paused in hidden tabs. */
 if (galaxyCanvas && !reduceMotion) {
   const ctx = galaxyCanvas.getContext("2d", { alpha: true });
   if (ctx) {
@@ -216,7 +202,8 @@ if (galaxyCanvas && !reduceMotion) {
     };
 
     resize();
-    new ResizeObserver(resize).observe(galaxyCanvas);
+    if ("ResizeObserver" in window) new ResizeObserver(resize).observe(galaxyCanvas);
+    else addEventListener("resize", resize, { passive: true });
     raf = requestAnimationFrame(draw);
     document.addEventListener("visibilitychange", () => {
       cancelAnimationFrame(raf);
@@ -225,7 +212,7 @@ if (galaxyCanvas && !reduceMotion) {
   }
 }
 
-/* Ripple feedback inspired by the Ripple Distortion demo. */
+/* Ripple feedback inspired by the Ripple Distortion reference. */
 if (hero && !reduceMotion && finePointer) {
   let lastRipple = 0;
   hero.addEventListener("pointerdown", (event) => {
