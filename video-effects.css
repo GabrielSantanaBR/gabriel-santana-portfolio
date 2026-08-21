@@ -53,6 +53,10 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 .project-card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.project-card:hover{box-shadow:0 26px 76px rgba(0,0,0,.29),0 0 0 1px rgba(114,235,177,.025) inset}
 .project-visual{transition:transform .28s cubic-bezier(.2,.7,.2,1),border-color .22s ease}.project-card:hover .project-visual{border-color:#35694f}
 
+/* Preserve absolute layout from the base design after adding the spotlight layer. */
+.compact-card .project-meta{position:absolute!important}
+.solution-card .solution-number,.solution-card>a{position:absolute!important}
+
 /* Buttons: subtle luminous edge and magnetic motion */
 .button,.card-button{position:relative;overflow:hidden;isolation:isolate}
 .button:after,.card-button:after{content:"";position:absolute;inset:-40% -10%;z-index:-1;opacity:0;transform:translateX(-70%) rotate(12deg);
