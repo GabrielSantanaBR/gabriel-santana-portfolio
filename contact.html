@@ -22,12 +22,11 @@
   <div class="page-header"><div class="breadcrumb"><a href="index.html">Início</a> / Contato</div><p class="eyebrow">BRIEFING DE PROJETO</p><h1 class="page-title">Conte o que precisa <span>funcionar melhor.</span></h1><p class="page-copy">Não precisa definir tecnologia. Explique a situação atual, o resultado esperado, uma faixa de investimento e como prefere receber o retorno.</p></div>
   <section class="contact-layout">
     <div class="contact-copy"><p class="eyebrow">COMO FUNCIONA</p><h2>O projeto começa pela <span>necessidade.</span></h2><p>Com algumas informações consigo avaliar se uma base pronta resolve o caso ou se vale construir algo específico.</p><div class="contact-points"><div><strong>1. Contexto</strong><span>O que acontece hoje e onde está a dificuldade.</span></div><div><strong>2. Resultado</strong><span>O que você gostaria de automatizar, organizar ou melhorar.</span></div><div><strong>3. Próximo passo</strong><span>Eu retorno pelo canal informado com perguntas, escopo ou estimativa.</span></div></div></div>
-    <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST" accept-charset="UTF-8">
+    <form class="contact-form" id="secure-contact-form" action="https://api.web3forms.com/submit" method="POST" accept-charset="UTF-8">
       <input type="hidden" name="access_key" value="c4f95a43-ff78-42b8-be6f-e58c32be1a8d"/>
       <input type="hidden" name="subject" value="Novo briefing pelo portfólio — Gabriel Santana"/>
       <input type="hidden" name="from_name" value="Portfólio Gabriel Santana"/>
       <input class="honeypot" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true"/>
-
       <div class="field"><label for="name">Seu nome</label><input id="name" name="Nome" autocomplete="name" autocapitalize="words" maxlength="80" placeholder="Como posso te chamar?" required/></div>
       <div class="field"><label for="service">Tipo de projeto</label><select id="service" name="Projeto" required><option value="">Selecione uma opção</option><option value="Agenda / CRM de clientes">Agenda / CRM de clientes</option><option value="Landing page comercial">Landing page comercial</option><option value="Site institucional">Site institucional</option><option value="Site com painel interno">Site com painel interno</option><option value="Sistema financeiro">Sistema financeiro</option><option value="Planilha inteligente / automação">Planilha inteligente / automação</option><option value="Dashboard / análise de dados">Dashboard / análise de dados</option><option value="IA / análise inteligente">IA / análise inteligente</option><option value="API / integração">API / integração</option><option value="MVP / sistema personalizado">MVP / sistema personalizado</option><option value="Outro projeto">Outro projeto</option></select></div>
       <div class="field"><label for="company">Empresa ou organização <span class="optional">(opcional)</span></label><input id="company" name="Empresa ou organização" autocomplete="organization" maxlength="100" placeholder="Nome do negócio, organização ou projeto"/></div>
@@ -39,6 +38,6 @@
   </section>
 </main>
 <footer><div><a class="brand" href="index.html">GS<span>.</span></a><p>Dados, software e automação para problemas reais.</p></div><div class="footer-links"><a href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a href="contact.html">Contato</a><a href="https://github.com/GabrielSantanaBR" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div><small>© <span id="year"></span> Gabriel Santana.</small></footer>
-<script src="script.js"></script><script src="effects.js"></script>
+<script src="script.js"></script><script src="contact.js"></script><script src="effects.js"></script>
 </body>
 </html>
