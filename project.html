@@ -1,21 +1,32 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="description" content="Detalhes de projeto do portfólio de Gabriel Santana."/><meta name="theme-color" content="#07110d"/><meta name="referrer" content="strict-origin-when-cross-origin"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"/>
-  <title>Projeto — Gabriel Santana</title><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/><link rel="stylesheet" href="styles.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="description" content="Detalhes de projeto do portfólio de Gabriel Santana."/>
+  <meta name="theme-color" content="#07110d"/>
+  <meta name="color-scheme" content="dark"/>
+  <meta name="robots" content="index,follow"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; media-src 'none'; worker-src 'none'; font-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; form-action 'none'; upgrade-insecure-requests"/>
+  <title>Projeto — Gabriel Santana</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="video-effects.css"/>
 </head>
 <body>
-<header class="topbar"><span class="scroll-progress" aria-hidden="true"></span><a class="brand" href="index.html">GS<span>.</span></a><nav><a href="index.html">Início</a><a class="active" href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a class="nav-cta" href="contact.html">Contato</a></nav></header>
+<a class="skip-link" href="#project-detail">Pular para o conteúdo</a>
+<header class="topbar"><span class="scroll-progress" aria-hidden="true"></span><a class="brand" href="index.html" aria-label="Gabriel Santana — início">GS<span>.</span></a><nav aria-label="Navegação principal"><a href="index.html">Início</a><a class="active" aria-current="page" href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a class="nav-cta" href="contact.html">Contato</a></nav></header>
 <main class="page-shell project-detail" id="project-detail">
   <div class="breadcrumb"><a href="index.html">Início</a> / <a href="index.html#projetos">Projetos</a> / <span id="project-breadcrumb">Detalhes</span></div>
   <section class="project-hero">
-    <div class="project-hero-copy"><p class="eyebrow" id="project-status">PROJETO</p><h1 id="project-title">Carregando projeto...</h1><p id="project-summary"></p><div class="tech-pills" id="project-tech"></div><div class="project-actions"><a class="button primary" id="project-repo" target="_blank" rel="noreferrer">Ver repositório <span>↗</span></a><a class="button secondary" id="project-demo" target="_blank" rel="noreferrer" hidden>Testar demo <span>↗</span></a><a class="button secondary" id="project-contact" href="contact.html">Projeto semelhante</a></div></div>
-    <div class="project-visual project-detail-visual" id="project-visual"></div>
+    <div class="project-hero-copy"><p class="eyebrow" id="project-status">PROJETO</p><h1 id="project-title">Carregando projeto...</h1><p id="project-summary"></p><div class="tech-pills" id="project-tech"></div><div class="project-actions"><a class="button primary" id="project-repo" target="_blank" rel="noopener noreferrer">Ver repositório <span>↗</span></a><a class="button secondary" id="project-demo" target="_blank" rel="noopener noreferrer" hidden>Testar demo <span>↗</span></a><a class="button secondary" id="project-contact" href="contact.html">Projeto semelhante</a></div></div>
+    <div class="project-visual project-detail-visual" id="project-visual" aria-label="Representação visual do projeto"></div>
   </section>
   <section class="detail-grid"><article class="detail-card"><p class="eyebrow">PROBLEMA</p><h3>O que precisava ser resolvido</h3><p id="project-problem"></p></article><article class="detail-card"><p class="eyebrow">SOLUÇÃO</p><h3>Como foi estruturado</h3><p id="project-solution"></p></article><article class="detail-card"><p class="eyebrow">RECURSOS</p><h3>O que o projeto demonstra</h3><ul id="project-features"></ul></article><article class="detail-card"><p class="eyebrow">STATUS</p><h3>Estado atual</h3><p id="project-current"></p></article></section>
   <section class="final-cta"><div><p class="eyebrow">QUER ALGO NESSA LINHA?</p><h2>O projeto pode ser <span>adaptado ao seu cenário.</span></h2><p>Explique o problema e eu organizo uma proposta com escopo, prioridades e valor.</p></div><a class="button primary large-button" href="contact.html">Montar briefing <span>↗</span></a></section>
 </main>
-<footer><div><a class="brand" href="index.html">GS<span>.</span></a><p>Dados, software e automação para problemas reais.</p></div><div class="footer-links"><a href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a href="contact.html">Contato</a><a href="https://github.com/GabrielSantanaBR" target="_blank" rel="noreferrer">GitHub ↗</a></div><small>© <span id="year"></span> Gabriel Santana.</small></footer>
-<script src="script.js"></script><script type="module" src="effects.js"></script>
-</body></html>
+<footer><div><a class="brand" href="index.html">GS<span>.</span></a><p>Dados, software e automação para problemas reais.</p></div><div class="footer-links"><a href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a href="contact.html">Contato</a><a href="https://github.com/GabrielSantanaBR" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div><small>© <span id="year"></span> Gabriel Santana.</small></footer>
+<script src="script.js"></script><script src="effects.js"></script>
+</body>
+</html>
