@@ -1,3 +1,5 @@
+@import url("backup-sites.css");
+
 .profile-proof{position:relative;border-top:1px solid rgba(99,223,165,.08);border-bottom:1px solid rgba(99,223,165,.08)}
 .profile-proof-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .profile-card{min-height:230px;padding:20px;border:1px solid #1f3b2d;border-radius:18px;background:linear-gradient(155deg,#0e1d16,#0a1710);position:relative;overflow:hidden;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
