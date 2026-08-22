@@ -15,6 +15,19 @@ const animateLatest = (element, keyframes, options = {}) => {
   return animation;
 };
 
+const movePill = (pill, container, target, duration = 260) => {
+  if (!pill || !container || !target || reduceMotion) return;
+  const containerRect = container.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  pill.classList.add('visible');
+  animateLatest(pill, [{
+    transform: `translate(${targetRect.left - containerRect.left}px,${targetRect.top - containerRect.top}px)`,
+    width: `${targetRect.width}px`,
+    height: `${targetRect.height}px`,
+    opacity: 1
+  }], { duration, easing: 'cubic-bezier(.22,1,.36,1)' });
+};
+
 const progress = document.querySelector('.scroll-progress');
 if (progress) {
   let ticking = false;
@@ -33,6 +46,56 @@ if (progress) {
     }
   }, { passive: true });
   updateProgress();
+}
+
+/* Unlumen-inspired active navigation pill, implemented without a framework. */
+const mainNav = document.querySelector('.topbar nav');
+if (mainNav && !reduceMotion) {
+  const pill = document.createElement('span');
+  pill.className = 'nav-motion-pill';
+  pill.setAttribute('aria-hidden', 'true');
+  mainNav.prepend(pill);
+
+  const activeLink = () => mainNav.querySelector('a.active') || mainNav.querySelector('a');
+  const restore = () => movePill(pill, mainNav, activeLink());
+  requestAnimationFrame(restore);
+
+  mainNav.addEventListener('pointerover', (event) => {
+    const link = event.target.closest('a');
+    if (link && mainNav.contains(link)) movePill(pill, mainNav, link, 220);
+  }, { passive: true });
+  mainNav.addEventListener('pointerleave', restore, { passive: true });
+  mainNav.addEventListener('focusin', (event) => {
+    const link = event.target.closest('a');
+    if (link) movePill(pill, mainNav, link, 200);
+  });
+  mainNav.addEventListener('focusout', () => requestAnimationFrame(restore));
+  addEventListener('resize', () => requestAnimationFrame(restore), { passive: true });
+}
+
+/* Motion-tabs style project filters. */
+const filters = document.querySelector('.filters');
+if (filters && !reduceMotion) {
+  const pill = document.createElement('span');
+  pill.className = 'filter-motion-pill';
+  pill.setAttribute('aria-hidden', 'true');
+  filters.prepend(pill);
+
+  const activeFilter = () => filters.querySelector('.filter-button.active') || filters.querySelector('.filter-button');
+  const restore = () => movePill(pill, filters, activeFilter(), 220);
+  requestAnimationFrame(restore);
+
+  filters.addEventListener('pointerover', (event) => {
+    const button = event.target.closest('.filter-button');
+    if (button) movePill(pill, filters, button, 180);
+  }, { passive: true });
+  filters.addEventListener('pointerleave', restore, { passive: true });
+  filters.addEventListener('focusin', (event) => {
+    const button = event.target.closest('.filter-button');
+    if (button) movePill(pill, filters, button, 180);
+  });
+  filters.addEventListener('click', () => requestAnimationFrame(restore));
+  addEventListener('resize', () => requestAnimationFrame(restore), { passive: true });
 }
 
 const hero = document.querySelector('.hero');
