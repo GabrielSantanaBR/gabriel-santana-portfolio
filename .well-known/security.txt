@@ -1,0 +1,4 @@
+Contact: https://gabrielsantanabr.github.io/gabriel-santana-portfolio/contact.html
+Canonical: https://gabrielsantanabr.github.io/gabriel-santana-portfolio/.well-known/security.txt
+Preferred-Languages: pt-BR, en
+Expires: 2027-08-21T00:00:00Z
