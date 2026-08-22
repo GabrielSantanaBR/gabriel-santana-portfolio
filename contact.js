@@ -31,6 +31,13 @@
     .trim()
     .slice(0, limit);
 
+  const safeStorageGet = (key) => {
+    try { return sessionStorage.getItem(key); } catch { return null; }
+  };
+  const safeStorageSet = (key, value) => {
+    try { sessionStorage.setItem(key, value); } catch { /* storage may be disabled */ }
+  };
+
   const params = new URLSearchParams(location.search);
   const mappedService = serviceMap[params.get('service')];
   if (mappedService && serviceField) serviceField.value = mappedService;
@@ -83,6 +90,8 @@
     for (const [key, value] of data.entries()) {
       payload[key] = typeof value === 'string' ? cleanText(value, key === 'Descrição' ? 2500 : 160) : value;
     }
+    // Used only by the browser's default HTML submission when JavaScript is unavailable.
+    delete payload.redirect;
     return payload;
   };
 
@@ -92,7 +101,7 @@
     validateContact();
     if (!form.reportValidity()) return;
 
-    const lastAttempt = Number(sessionStorage.getItem('portfolio-contact-attempt') || 0);
+    const lastAttempt = Number(safeStorageGet('portfolio-contact-attempt') || 0);
     if (Date.now() - lastAttempt < 15000) {
       status.textContent = 'Aguarde alguns segundos antes de tentar enviar novamente.';
       status.classList.add('form-error');
@@ -110,7 +119,7 @@
     }
     messageField.setCustomValidity('');
 
-    sessionStorage.setItem('portfolio-contact-attempt', String(Date.now()));
+    safeStorageSet('portfolio-contact-attempt', String(Date.now()));
     const originalLabel = submitButton.textContent;
     submitButton.disabled = true;
     submitButton.textContent = 'Enviando...';
