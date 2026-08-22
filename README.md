@@ -17,9 +17,17 @@ Site público: **https://gabrielsantanabr.github.io/gabriel-santana-portfolio/**
 
 ## Direção visual
 
-O site usa um design system próprio em verde escuro, layout responsivo e microinterações. A camada `video-effects.css` / `effects.js` aplica padrões inspirados em bibliotecas modernas de UI animada — como ambiente tipo galaxy, ripple feedback, spotlight em cards, marquee, tipografia com brilho e microinterações magnéticas — sem transformar o portfólio em uma aplicação React ou adicionar um runtime pesado.
+O site usa um design system próprio em verde escuro com referências de composição e interação estudadas em **Unlumen UI, GetLayers e MotionSites**. As referências são usadas como direção de design — hierarquia, profundidade, motion, bento layouts, navegação e atmosfera — sem copiar templates proprietários.
 
-A animação estrutural utiliza **Motion**, carregado em versão fixada por CDN. A implementação respeita `prefers-reduced-motion`, limita a densidade/DPR do canvas, pausa o efeito ambiente quando a aba fica oculta e mantém o conteúdo navegável caso a camada de animação não carregue.
+A implementação visual é dividida em:
+
+- `styles.css`: estrutura e componentes-base;
+- `backup-sites.css`: composição editorial/cinematográfica e acabamento inspirado nas referências salvas;
+- `video-effects.css`: galaxy ambience, ripple, spotlight, marquee, tipografia e microinterações;
+- `portfolio-proof.css`: seção de base profissional;
+- `effects.js`: animações e interações feitas com **Web Animations API, IntersectionObserver e Canvas nativos**.
+
+O runtime visual não depende mais de bibliotecas JavaScript externas. A implementação respeita `prefers-reduced-motion`, limita densidade/DPR do canvas, pausa o efeito ambiente quando a aba fica oculta e mantém o conteúdo essencial no HTML mesmo sem JavaScript.
 
 ## Critério do portfólio
 
@@ -31,11 +39,17 @@ Python, SQL, Django, FastAPI, PostgreSQL, SQLAlchemy, Pandas, scikit-learn, SciP
 
 ## Segurança
 
-O portfólio é estático e não possui banco de dados ou autenticação própria. A configuração inclui Content Security Policy, validação do formulário, honeypot, tratamento de rate limit e verificações automáticas para referências quebradas, estilos inline e padrões comuns de segredos commitados. Detalhes estão em [`SECURITY.md`](SECURITY.md).
+O portfólio é estático e não possui banco de dados ou autenticação própria. A configuração inclui CSP restritiva com scripts locais, validação e normalização do formulário, honeypot, timeout, cooldown de envio, `credentials: omit`, `referrerPolicy: no-referrer`, 404 própria e `security.txt`.
+
+O Web3Forms é a única conexão externa permitida na página de contato. Detalhes estão em [`SECURITY.md`](SECURITY.md).
 
 ## Publicação e validação
 
-O site é publicado no GitHub Pages a partir da branch `main`. O workflow em `.github/workflows/pages.yml` valida sintaxe JavaScript, arquivos obrigatórios, referências locais, camada visual, padrões de segurança e rotas dos projetos antes do deploy.
+O site é publicado no GitHub Pages a partir da branch `main`. O workflow em `.github/workflows/pages.yml` valida sintaxe JavaScript, arquivos obrigatórios, referências locais, CSP, ausência de scripts/estilos inline, links externos seguros, sitemap, fluxo do formulário, padrões comuns de segredos e rotas dos projetos antes do deploy.
+
+## SEO e descoberta
+
+O repositório inclui `robots.txt`, `sitemap.xml`, metadados Open Graph na home e página 404 dedicada.
 
 ## Contato
 
