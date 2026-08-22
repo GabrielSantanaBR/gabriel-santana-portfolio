@@ -5,24 +5,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta name="description" content="Portfólio de Gabriel Santana — sistemas, dados, inteligência artificial e automação para problemas reais."/>
   <meta name="theme-color" content="#07110d"/>
+  <meta name="color-scheme" content="dark"/>
+  <meta name="robots" content="index,follow,max-image-preview:large"/>
   <meta name="referrer" content="strict-origin-when-cross-origin"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self' https://cdn.jsdelivr.net; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Gabriel Santana — Data & Software"/>
+  <meta property="og:description" content="Sistemas, automações e inteligência de dados transformados em produtos digitais."/>
+  <meta property="og:url" content="https://gabrielsantanabr.github.io/gabriel-santana-portfolio/"/>
+  <meta property="og:site_name" content="Gabriel Santana — Portfolio"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; media-src 'none'; worker-src 'none'; font-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; form-action 'none'; upgrade-insecure-requests"/>
   <title>Gabriel Santana — Data & Software</title>
+  <link rel="canonical" href="https://gabrielsantanabr.github.io/gabriel-santana-portfolio/"/>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/>
   <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="video-effects.css"/>
+  <link rel="stylesheet" href="portfolio-proof.css"/>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Pular para o conteúdo</a>
 <header class="topbar">
   <span class="scroll-progress" aria-hidden="true"></span>
-  <a class="brand" href="index.html">GS<span>.</span></a>
+  <a class="brand" href="index.html" aria-label="Gabriel Santana — início">GS<span>.</span></a>
   <nav aria-label="Navegação principal">
-    <a class="active" href="index.html">Início</a>
+    <a class="active" aria-current="page" href="index.html">Início</a>
     <a href="#projetos">Projetos</a>
     <a href="prices.html">Preços</a>
     <a class="nav-cta" href="contact.html">Contato</a>
   </nav>
 </header>
-<main>
+<main id="main-content">
   <section class="hero" id="inicio">
     <div class="hero-copy-wrap">
       <p class="availability"><span></span> Disponível para novos projetos</p>
@@ -70,9 +81,7 @@
 
     <div class="project-grid">
       <article class="project-card project-wide featured" data-category="product web">
-        <div class="project-visual clientflow-visual">
-          <div class="cf-preview"><div class="cf-side"><b>CF</b><i></i><i></i><i></i><i></i></div><div class="cf-main"><div class="cf-head"><b>ClientFlow</b><span>Agenda de hoje</span></div><div class="cf-kpis"><div><small>Atendimentos</small><strong>4</strong></div><div><small>Receita</small><strong>R$ 335</strong></div><div><small>Clientes</small><strong>5</strong></div></div><div class="cf-agenda"><span><b>09:30</b> Lucas Almeida <i>Confirmado</i></span><span><b>11:00</b> Rafael Costa <i>Confirmado</i></span><span><b>14:30</b> Bruno Martins <i>Pendente</i></span></div></div></div>
-        </div>
+        <div class="project-visual clientflow-visual"><div class="cf-preview"><div class="cf-side"><b>CF</b><i></i><i></i><i></i><i></i></div><div class="cf-main"><div class="cf-head"><b>ClientFlow</b><span>Agenda de hoje</span></div><div class="cf-kpis"><div><small>Atendimentos</small><strong>4</strong></div><div><small>Receita</small><strong>R$ 335</strong></div><div><small>Clientes</small><strong>5</strong></div></div><div class="cf-agenda"><span><b>09:30</b> Lucas Almeida <i>Confirmado</i></span><span><b>11:00</b> Rafael Costa <i>Confirmado</i></span><span><b>14:30</b> Bruno Martins <i>Pendente</i></span></div></div></div></div>
         <div class="project-meta"><span class="tag">Produto comercial</span><span>01</span></div>
         <h3>ClientFlow</h3><p>Agenda, CRM, serviços, orçamentos e atendimento para negócios que trabalham com hora marcada.</p>
         <div class="stack">JavaScript · CRM · Scheduling · PWA</div><a class="card-button" href="project.html?id=clientflow">Explorar projeto <span>↗</span></a>
@@ -87,9 +96,7 @@
 
       <article class="project-card" data-category="data">
         <div class="project-visual curtailment-visual"><div class="curtail-preview"><div class="curtail-head"><b>Curtailment Intelligence</b><span>Renewable operations</span></div><div class="risk-row"><div><small>RISCO</small><strong>72%</strong><span>próximas 6h</span></div><div><small>ENERGIA</small><strong>18.4</strong><span>MWh em risco</span></div></div><div class="power-line"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="impact-chip"><span>Otimização</span><b>+11.2 MWh recuperáveis</b></div></div></div>
-        <div class="project-meta"><span class="tag">AI + Energia</span><span>03</span></div>
-        <h3>Curtailment Intelligence</h3><p>Previsão, explicabilidade e otimização de cenários para restrições de geração renovável.</p>
-        <div class="stack">FastAPI · ML · Optimization · SQLAlchemy</div><a class="card-button" href="project.html?id=curtailment">Explorar projeto <span>↗</span></a>
+        <div class="project-meta"><span class="tag">AI + Energia</span><span>03</span></div><h3>Curtailment Intelligence</h3><p>Previsão, explicabilidade e otimização de cenários para restrições de geração renovável.</p><div class="stack">FastAPI · ML · Optimization · SQLAlchemy</div><a class="card-button" href="project.html?id=curtailment">Explorar projeto <span>↗</span></a>
       </article>
 
       <article class="project-card" data-category="product web">
@@ -103,7 +110,7 @@
       </article>
 
       <article class="project-card" data-category="web product">
-        <div class="project-visual site-visual"><div class="browser-preview"><div class="browser-toolbar"><i></i><i></i><i></i><span>empresa.local</span></div><div class="browser-content"><nav><b>Marca</b><span>Início</span><span>Sobre</span><span>Conteúdo</span><span>Contato</span></nav><div class="site-hero"><small>SITE INSTITUCIONAL</small><strong>Conteúdo claro e administrável.</strong><button>Saiba mais</button></div><div class="site-cards"><article><b>Sobre</b><small>Institucional</small></article><article><b>Agenda</b><small>Conteúdo</small></article><article><b>Contato</b><small>Formulário</small></article></div></div></div></div>
+        <div class="project-visual site-visual"><div class="browser-preview"><div class="browser-toolbar"><i></i><i></i><i></i><span>empresa.local</span></div><div class="browser-content"><nav><b>Marca</b><span>Início</span><span>Sobre</span><span>Conteúdo</span><span>Contato</span></nav><div class="site-hero"><small>SITE INSTITUCIONAL</small><strong>Conteúdo claro e administrável.</strong><button type="button" tabindex="-1">Saiba mais</button></div><div class="site-cards"><article><b>Sobre</b><small>Institucional</small></article><article><b>Agenda</b><small>Conteúdo</small></article><article><b>Contato</b><small>Formulário</small></article></div></div></div></div>
         <div class="project-meta"><span class="tag">Full-stack</span><span>06</span></div><h3>Institutional Site Template</h3><p>Site institucional com conteúdo dinâmico, painel administrativo e formulário protegido.</p><div class="stack">TypeScript · React · Next.js · Cloudflare D1</div><a class="card-button" href="project.html?id=institutional">Explorar projeto <span>↗</span></a>
       </article>
 
@@ -127,6 +134,20 @@
     </div>
   </section>
 
+  <section class="section profile-proof" aria-labelledby="profile-proof-title">
+    <div class="section-head">
+      <div><p class="eyebrow">BASE PROFISSIONAL</p><h2 id="profile-proof-title">Projetos fortes precisam de <span>fundamento.</span></h2></div>
+      <p>Minha base combina dados, desenvolvimento de software, experiência com processos reais e raciocínio quantitativo.</p>
+    </div>
+    <div class="profile-proof-grid">
+      <article class="profile-card"><span>01</span><h3>Dados & IA</h3><p>Formação complementar em Engenharia de Dados, SQL e Análise de Dados, aplicada em projetos de previsão, anomalias, segmentação e decisão.</p><div class="profile-tags"><span>Python</span><span>SQL</span><span>ML</span><span>Pandas</span></div></article>
+      <article class="profile-card"><span>02</span><h3>Software & produto</h3><p>Construção de APIs, sistemas web, bancos de dados e interfaces responsivas com foco em regras de negócio e uso real.</p><div class="profile-tags"><span>Django</span><span>FastAPI</span><span>PostgreSQL</span><span>Web</span></div></article>
+      <article class="profile-card"><span>03</span><h3>Raciocínio quantitativo</h3><p>Estudo quantitativo aplicado a modelagem, métricas, lógica e resolução estruturada de problemas.</p><div class="profile-tags"><span>Modelagem</span><span>Lógica</span><span>Métricas</span></div></article>
+      <article class="profile-card"><span>04</span><h3>Operação real</h3><p>Experiência com organização de dados, documentos e processos, além de soluções construídas para pequenos negócios e organizações.</p><div class="profile-tags"><span>Processos</span><span>Dados</span><span>Automação</span></div></article>
+    </div>
+    <div class="profile-proof-footer"><p>Os projetos destacados são os mais relevantes. Repositórios de estudo e experimentos ficam no GitHub sem competir com os cases principais.</p><a class="button secondary" href="https://github.com/GabrielSantanaBR" target="_blank" rel="noopener noreferrer">Ver GitHub completo <span>↗</span></a></div>
+  </section>
+
   <section class="section process-section">
     <div class="section-head"><div><p class="eyebrow">PROCESSO</p><h2>Menos burocracia. <span>Mais clareza.</span></h2></div></div>
     <div class="process-grid"><article><span>01</span><strong>Entender</strong><p>Você descreve o problema, usuários, rotina atual e objetivo.</p></article><article><span>02</span><strong>Estruturar</strong><p>Eu transformo isso em escopo, prioridades, arquitetura e proposta.</p></article><article><span>03</span><strong>Construir</strong><p>Desenvolvimento, validação, ajustes e entrega com foco no uso real.</p></article></div>
@@ -137,8 +158,8 @@
     <a class="button primary large-button" href="contact.html">Montar briefing <span>↗</span></a>
   </section>
 </main>
-<footer><div><a class="brand" href="index.html">GS<span>.</span></a><p>Dados, software e automação para problemas reais.</p></div><div class="footer-links"><a href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a href="contact.html">Contato</a><a href="https://github.com/GabrielSantanaBR" target="_blank" rel="noreferrer">GitHub ↗</a></div><small>© <span id="year"></span> Gabriel Santana.</small></footer>
+<footer><div><a class="brand" href="index.html">GS<span>.</span></a><p>Dados, software e automação para problemas reais.</p></div><div class="footer-links"><a href="index.html#projetos">Projetos</a><a href="prices.html">Preços</a><a href="contact.html">Contato</a><a href="https://github.com/GabrielSantanaBR" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div><small>© <span id="year"></span> Gabriel Santana.</small></footer>
 <script src="script.js"></script>
-<script type="module" src="effects.js"></script>
+<script src="effects.js"></script>
 </body>
 </html>
