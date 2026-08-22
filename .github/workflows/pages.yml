@@ -24,22 +24,18 @@ jobs:
       - name: Validate JavaScript syntax
         run: |
           node --check script.js
-          node --check --input-type=module < effects.js
+          node --check effects.js
+          node --check contact.js
 
       - name: Validate required files
         run: |
-          test -f index.html
-          test -f project.html
-          test -f prices.html
-          test -f contact.html
-          test -f thanks.html
-          test -f styles.css
-          test -f video-effects.css
-          test -f portfolio-proof.css
-          test -f backup-sites.css
-          test -f script.js
-          test -f effects.js
-          test -f assets/favicon.svg
+          for file in \
+            index.html project.html prices.html contact.html thanks.html 404.html \
+            styles.css video-effects.css backup-sites.css portfolio-proof.css \
+            script.js effects.js contact.js robots.txt sitemap.xml SECURITY.md \
+            .well-known/security.txt assets/favicon.svg; do
+            test -f "$file" || { echo "Missing required file: $file"; exit 1; }
+          done
 
       - name: Validate local HTML references
         run: |
@@ -77,23 +73,100 @@ jobs:
           print('Local references OK')
           PY
 
-      - name: Validate visual layer
+      - name: Validate CSP and safe markup
         run: |
-          grep -q 'video-effects.css' effects.js
-          grep -q 'portfolio-proof.css' effects.js
-          grep -q 'backup-sites.css' portfolio-proof.css
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          failures = []
+
+          class Audit(HTMLParser):
+              def __init__(self, source):
+                  super().__init__()
+                  self.source = source
+                  self.csp = None
+              def handle_starttag(self, tag, attrs):
+                  data = dict(attrs)
+                  if 'style' in data:
+                      failures.append(f'{self.source}: inline style attribute')
+                  if tag == 'script' and not data.get('src'):
+                      failures.append(f'{self.source}: inline script')
+                  if tag == 'a' and data.get('target') == '_blank':
+                      rel = set((data.get('rel') or '').split())
+                      if not {'noopener', 'noreferrer'} <= rel:
+                          failures.append(f'{self.source}: target=_blank without noopener+noreferrer')
+                  if tag == 'meta' and (data.get('http-equiv') or '').lower() == 'content-security-policy':
+                      self.csp = data.get('content', '')
+
+          for path in Path('.').glob('*.html'):
+              audit = Audit(path)
+              audit.feed(path.read_text(encoding='utf-8'))
+              csp = audit.csp or ''
+              required = [
+                  "script-src 'self'",
+                  "style-src 'self'",
+                  "object-src 'none'",
+                  "base-uri 'none'",
+                  "frame-src 'none'",
+                  'upgrade-insecure-requests',
+              ]
+              for directive in required:
+                  if directive not in csp:
+                      failures.append(f'{path}: CSP missing {directive}')
+              if 'cdn.jsdelivr.net' in csp:
+                  failures.append(f'{path}: external script CDN allowed in CSP')
+
+          if failures:
+              raise SystemExit('Security markup validation failed:\n' + '\n'.join(failures))
+          print('CSP and markup OK')
+          PY
+
+      - name: Validate local-only motion runtime
+        run: |
+          if grep -Rni 'cdn.jsdelivr.net' --include='*.html' --include='*.js' .; then
+            echo 'Third-party JavaScript runtime detected.'
+            exit 1
+          fi
+          if grep -nE '^\s*import\s' effects.js; then
+            echo 'effects.js must stay dependency-free.'
+            exit 1
+          fi
           grep -q 'prefers-reduced-motion' effects.js
           grep -q 'prefers-reduced-motion' video-effects.css
           grep -q 'prefers-reduced-motion' backup-sites.css
-          if grep -Rni 'style=' --include='*.html' .; then
-            echo 'Inline style attribute found; keep styling under CSP-safe stylesheets.'
-            exit 1
-          fi
+          grep -q 'backup-sites.css' portfolio-proof.css
+
+      - name: Validate contact security flow
+        run: |
+          grep -q 'id="secure-contact-form"' contact.html
+          grep -q 'contact.js' contact.html
+          grep -q "credentials: 'omit'" contact.js
+          grep -q "referrerPolicy: 'no-referrer'" contact.js
+          grep -q 'AbortController' contact.js
+          grep -q 'botcheck' contact.html
+          grep -q 'https://api.web3forms.com' contact.html
+
+      - name: Validate sitemap and crawler files
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          ET.parse('sitemap.xml')
+          robots = Path('robots.txt').read_text(encoding='utf-8')
+          if 'Sitemap:' not in robots:
+              raise SystemExit('robots.txt has no sitemap reference')
+          security = Path('.well-known/security.txt').read_text(encoding='utf-8')
+          for field in ('Contact:', 'Canonical:', 'Expires:'):
+              if field not in security:
+                  raise SystemExit(f'security.txt missing {field}')
+          print('SEO and security metadata OK')
+          PY
 
       - name: Check common committed secret patterns
         run: |
-          if grep -RniE '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[0-9A-Z]{16})' --exclude-dir=.git .; then
-            echo 'Potential secret detected.'
+          if grep -RniE '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{30,})' --exclude-dir=.git .; then
+            echo 'Potential privileged secret detected.'
             exit 1
           fi
 
