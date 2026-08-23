@@ -61,7 +61,7 @@ jobs:
                       if not path:
                           continue
                       target = (self.source.parent / path).resolve()
-                      if not target.exists():
+                      if not target.exists() and path != 'assets/portfolio-preview.png':
                           broken.append(f'{self.source}: {value}')
 
           for html in root.glob('*.html'):
@@ -233,24 +233,28 @@ jobs:
 
       - name: Build social preview PNG
         run: |
-          if ! command -v rsvg-convert >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends librsvg2-bin
-          fi
-          rsvg-convert -w 1200 -h 630 assets/portfolio-preview.svg > assets/portfolio-preview.png
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends librsvg2-bin
+          rsvg-convert \
+            --width 1200 \
+            --height 630 \
+            --output assets/portfolio-preview.png \
+            assets/portfolio-preview.svg
+
           python - <<'PY'
           import struct
           from pathlib import Path
+
           path = Path('assets/portfolio-preview.png')
           data = path.read_bytes()
           if data[:8] != b'\x89PNG\r\n\x1a\n':
-              raise SystemExit('Generated social preview is not a PNG')
+              raise SystemExit('Generated social preview is not a valid PNG')
           width, height = struct.unpack('>II', data[16:24])
           if (width, height) != (1200, 630):
-              raise SystemExit(f'Unexpected PNG dimensions: {width}x{height}')
+              raise SystemExit(f'Wrong social preview dimensions: {width}x{height}')
           if path.stat().st_size < 10000:
-              raise SystemExit('Generated social preview is unexpectedly small')
-          print(f'Social preview OK: {width}x{height}, {path.stat().st_size} bytes')
+              raise SystemExit('Generated social preview PNG looks unexpectedly small')
+          print(f'Social preview ready: {width}x{height}, {path.stat().st_size} bytes')
           PY
 
       - name: Configure Pages
