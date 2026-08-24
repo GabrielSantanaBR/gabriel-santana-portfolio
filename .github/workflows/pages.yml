@@ -33,44 +33,48 @@ jobs:
             index.html project.html prices.html contact.html thanks.html 404.html \
             styles.css video-effects.css backup-sites.css portfolio-proof.css \
             script.js effects.js contact.js robots.txt sitemap.xml SECURITY.md \
-            .well-known/security.txt assets/favicon.svg assets/portfolio-preview.svg; do
+            .well-known/security.txt assets/favicon.svg assets/portfolio-preview-v2.png; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
 
-      - name: Validate local HTML references
+      - name: Validate local HTML references and duplicate IDs
         run: |
           python - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path
           from urllib.parse import urlsplit
 
-          root = Path('.')
           broken = []
+          duplicates = []
 
-          class Links(HTMLParser):
+          class Audit(HTMLParser):
               def __init__(self, source):
                   super().__init__()
                   self.source = source
+                  self.ids = set()
               def handle_starttag(self, tag, attrs):
-                  for key, value in attrs:
-                      if key not in {'href', 'src'} or not value:
-                          continue
-                      if value.startswith(('http://','https://','#','mailto:','tel:','data:')):
+                  data = dict(attrs)
+                  element_id = data.get('id')
+                  if element_id:
+                      if element_id in self.ids:
+                          duplicates.append(f'{self.source}: duplicate id={element_id}')
+                      self.ids.add(element_id)
+                  for key in ('href', 'src'):
+                      value = data.get(key)
+                      if not value or value.startswith(('http://','https://','#','mailto:','tel:','data:')):
                           continue
                       path = urlsplit(value).path
-                      if not path:
-                          continue
-                      target = (self.source.parent / path).resolve()
-                      if not target.exists() and path != 'assets/portfolio-preview.png':
+                      if path and not (self.source.parent / path).resolve().exists():
                           broken.append(f'{self.source}: {value}')
 
-          for html in root.glob('*.html'):
-              parser = Links(html)
+          for html in Path('.').glob('*.html'):
+              parser = Audit(html)
               parser.feed(html.read_text(encoding='utf-8'))
 
-          if broken:
-              raise SystemExit('Broken local references:\n' + '\n'.join(broken))
-          print('Local references OK')
+          errors = broken + duplicates
+          if errors:
+              raise SystemExit('HTML integrity validation failed:\n' + '\n'.join(errors))
+          print('HTML references and IDs OK')
           PY
 
       - name: Validate CSP and safe markup
@@ -122,13 +126,24 @@ jobs:
           print('CSP and markup OK')
           PY
 
-      - name: Validate social sharing metadata
+      - name: Validate committed social preview
         run: |
           python - <<'PY'
           from html.parser import HTMLParser
-          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          import struct
 
-          EXPECTED_IMAGE = 'https://gabrielsantanabr.github.io/gabriel-santana-portfolio/assets/portfolio-preview.png'
+          image_url = 'https://gabrielsantanabr.github.io/gabriel-santana-portfolio/assets/portfolio-preview-v2.png'
+          image_path = Path('assets/portfolio-preview-v2.png')
+
+          data = image_path.read_bytes()
+          if data[:8] != b'\x89PNG\r\n\x1a\n':
+              raise SystemExit('Social preview is not a valid PNG')
+          width, height = struct.unpack('>II', data[16:24])
+          if (width, height) != (1200, 630):
+              raise SystemExit(f'Wrong social preview dimensions: {width}x{height}')
+          if image_path.stat().st_size < 10000:
+              raise SystemExit('Social preview PNG looks unexpectedly small')
 
           class MetaParser(HTMLParser):
               def __init__(self):
@@ -143,25 +158,23 @@ jobs:
                       self.meta[key] = data.get('content', '')
 
           parser = MetaParser()
-          parser.feed(open('index.html', encoding='utf-8').read())
+          parser.feed(Path('index.html').read_text(encoding='utf-8'))
           required = {
               'og:title': 'Gabriel Santana | Dados, IA e Desenvolvimento',
-              'og:image': EXPECTED_IMAGE,
+              'og:image': image_url,
+              'og:image:url': image_url,
+              'og:image:secure_url': image_url,
               'og:image:type': 'image/png',
               'og:image:width': '1200',
               'og:image:height': '630',
               'twitter:card': 'summary_large_image',
-              'twitter:image': EXPECTED_IMAGE,
+              'twitter:image': image_url,
           }
           for key, expected in required.items():
               actual = parser.meta.get(key)
               if actual != expected:
                   raise SystemExit(f'{key} invalid: {actual!r}')
-
-          root = ET.parse('assets/portfolio-preview.svg').getroot()
-          if root.attrib.get('width') != '1200' or root.attrib.get('height') != '630':
-              raise SystemExit('Social preview SVG must be exactly 1200x630')
-          print('Social metadata and preview source OK')
+          print(f'Social preview OK: {width}x{height}, {image_path.stat().st_size} bytes')
           PY
 
       - name: Validate local-only visual runtime
@@ -177,7 +190,6 @@ jobs:
           grep -q 'prefers-reduced-motion' effects.js
           grep -q 'prefers-reduced-motion' video-effects.css
           grep -q 'prefers-reduced-motion' backup-sites.css
-          grep -q 'backup-sites.css' video-effects.css
           grep -q 'nav-motion-pill' effects.js
           grep -q 'filter-motion-pill' effects.js
 
@@ -230,43 +242,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Build social preview PNG
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends librsvg2-bin
-          rsvg-convert \
-            --width 1200 \
-            --height 630 \
-            --output assets/portfolio-preview.png \
-            assets/portfolio-preview.svg
-
-          python - <<'PY'
-          import struct
-          from pathlib import Path
-
-          path = Path('assets/portfolio-preview.png')
-          data = path.read_bytes()
-          if data[:8] != b'\x89PNG\r\n\x1a\n':
-              raise SystemExit('Generated social preview is not a valid PNG')
-          width, height = struct.unpack('>II', data[16:24])
-          if (width, height) != (1200, 630):
-              raise SystemExit(f'Wrong social preview dimensions: {width}x{height}')
-          if path.stat().st_size < 10000:
-              raise SystemExit('Generated social preview PNG looks unexpectedly small')
-          print(f'Social preview ready: {width}x{height}, {path.stat().st_size} bytes')
-          PY
-
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
-
       - name: Upload static site
         uses: actions/upload-pages-artifact@v4
         with:
           path: .
-
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
