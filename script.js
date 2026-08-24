@@ -6,7 +6,7 @@ decisionforge:'<div class="decision-preview"><div class="decision-head"><b>Decis
 curtailment:'<div class="curtail-preview"><div class="curtail-head"><b>Curtailment Intelligence</b><span>Renewable operations</span></div><div class="risk-row"><div><small>RISCO</small><strong>72%</strong><span>próximas 6h</span></div><div><small>ENERGIA</small><strong>18.4</strong><span>MWh em risco</span></div></div><div class="power-line"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="impact-chip"><span>Otimização</span><b>+11.2 MWh recuperáveis</b></div></div>',
 finance:'<div class="ui-window"><div class="ui-top"><b>Finance Manager</b><span>Visão mensal</span></div><div class="ui-body"><aside><b>FM</b><span>Visão geral</span><span>Lançamentos</span><span>Relatórios</span></aside><section><div class="ui-kpis"><div><small>Receitas</small><strong>R$ 18,4k</strong></div><div><small>Despesas</small><strong>R$ 11,2k</strong></div><div><small>Saldo</small><strong>R$ 7,2k</strong></div></div><div class="clean-chart"><div></div><div></div><div></div><div></div><div></div><div></div></div></section></div></div>',
 pricing:'<div class="sheet-preview"><div class="sheet-title"><b>Pricing & Sales</b><span>Resumo comercial</span></div><div class="sheet-metrics"><div><small>Receita</small><strong>R$ 8.960</strong></div><div><small>Lucro</small><strong>R$ 3.210</strong></div><div><small>Margem</small><strong>35,8%</strong></div></div><div class="real-table"><div class="table-head"><span>Produto</span><span>Custo</span><span>Venda</span><span>Margem</span></div><div><span>Produto A</span><span>R$ 4,20</span><span>R$ 9,00</span><span>53%</span></div><div><span>Produto B</span><span>R$ 22,80</span><span>R$ 48,00</span><span>52%</span></div><div><span>Produto C</span><span>R$ 3,10</span><span>R$ 7,00</span><span>56%</span></div></div></div>',
-institutional:'<div class="browser-preview"><div class="browser-toolbar"><i></i><i></i><i></i><span>empresa.local</span></div><div class="browser-content"><nav><b>Marca</b><span>Início</span><span>Sobre</span><span>Conteúdo</span><span>Contato</span></nav><div class="site-hero"><small>SITE INSTITUCIONAL</small><strong>Conteúdo claro e administrável.</strong><button>Saiba mais</button></div><div class="site-cards"><article><b>Sobre</b><small>Institucional</small></article><article><b>Agenda</b><small>Conteúdo</small></article><article><b>Contato</b><small>Formulário</small></article></div></div></div>',
+institutional:'<div class="browser-preview"><div class="browser-toolbar"><i></i><i></i><i></i><span>empresa.local</span></div><div class="browser-content"><nav><b>Marca</b><span>Início</span><span>Sobre</span><span>Conteúdo</span><span>Contato</span></nav><div class="site-hero"><small>SITE INSTITUCIONAL</small><strong>Conteúdo claro e administrável.</strong><span class="mock-button">Saiba mais</span></div><div class="site-cards"><article><b>Sobre</b><small>Institucional</small></article><article><b>Agenda</b><small>Conteúdo</small></article><article><b>Contato</b><small>Formulário</small></article></div></div></div>',
 csv:'<div class="analytics-preview"><div class="analytics-title"><b>Sales Analysis</b><span>Produtos</span></div><div class="analytics-layout"><div><div class="axis-chart"><span>10k</span><span>5k</span><span>0</span><div class="bars"><i></i><i></i><i></i><i></i></div></div><div class="chart-labels"><span>A</span><span>B</span><span>C</span><span>D</span></div></div><div class="analytics-ranking"><small>Ranking</small><span><b>1</b> Produto D</span><span><b>2</b> Produto B</span><span><b>3</b> Produto C</span></div></div></div>',
 riftpilot:'<div class="rift-preview"><div class="rift-head"><b>RiftPilot</b><span>Analytics</span></div><div class="rift-body"><div class="rift-board"><div class="lane top"></div><div class="lane mid"></div><div class="lane bottom"></div><span class="point p1"></span><span class="point p2"></span><span class="point p3"></span></div><div class="rift-insights"><small>LEITURA ATUAL</small><strong>Priorize objetivo</strong><div><span>Risco</span><b>Médio</b></div><div><span>Build</span><b>Defensiva</b></div></div></div></div>'
 };
@@ -24,9 +24,11 @@ riftpilot:{title:'RiftPilot',status:'EM DESENVOLVIMENTO',visual:'rift-visual',vi
 
 const detail=document.getElementById('project-detail');
 if(detail){
-  const id=new URLSearchParams(location.search).get('id')||'clientflow';
-  const p=projects[id]||projects.clientflow;
+  const requestedId=new URLSearchParams(location.search).get('id')||'clientflow';
+  const p=projects[requestedId]||projects.clientflow;
   document.title=`${p.title} — Gabriel Santana`;
+  const metaDescription=document.querySelector('meta[name="description"]');
+  if(metaDescription)metaDescription.setAttribute('content',p.summary);
   document.getElementById('project-title').textContent=p.title;
   document.getElementById('project-breadcrumb').textContent=p.title;
   document.getElementById('project-status').textContent=p.status;
@@ -43,34 +45,20 @@ if(detail){
   document.getElementById('project-features').replaceChildren(...p.features.map(f=>{const l=document.createElement('li');l.textContent=f;return l}));
 }
 
-const filterButtons=document.querySelectorAll('.filter-button');
+const filterButtons=[...document.querySelectorAll('.filter-button')];
 if(filterButtons.length){
   const cards=[...document.querySelectorAll('.project-card[data-category]')];
-  filterButtons.forEach(button=>button.addEventListener('click',()=>{
-    filterButtons.forEach(item=>item.classList.toggle('active',item===button));
-    const filter=button.dataset.filter;
+  const applyFilter=(button)=>{
+    filterButtons.forEach(item=>{
+      const selected=item===button;
+      item.classList.toggle('active',selected);
+      item.setAttribute('aria-pressed',String(selected));
+    });
+    const filter=button.dataset.filter||'all';
     cards.forEach(card=>{card.hidden=filter!=='all'&&!card.dataset.category.split(' ').includes(filter)});
-  }));
-}
-
-const contactForm=document.getElementById('contact-form');
-if(contactForm){
-  const params=new URLSearchParams(location.search),serviceField=document.getElementById('service'),messageField=document.getElementById('message');
-  const serviceMap={clientflow:'Agenda / CRM de clientes',site:'Site institucional','site-panel':'Site com painel interno',finance:'Sistema financeiro',spreadsheet:'Planilha inteligente / automação',data:'Dashboard / análise de dados',ai:'IA / análise inteligente',api:'API / integração',custom:'Sistema personalizado',other:'Outro projeto'};
-  if(serviceMap[params.get('service')])serviceField.value=serviceMap[params.get('service')];
-  if(params.get('project'))messageField.value=`Tenho interesse em um projeto semelhante ao ${params.get('project')}. `;
-  const method=document.getElementById('contact-method'),value=document.getElementById('contact-value');
-  method?.addEventListener('change',()=>{const placeholders={'E-mail':'seuemail@exemplo.com','WhatsApp':'(DDD) 00000-0000','Telefone':'(DDD) 00000-0000','LinkedIn':'linkedin.com/in/seu-perfil'};value.placeholder=placeholders[method.value]||'E-mail, número ou perfil'});
-  contactForm.addEventListener('submit',async event=>{
-    event.preventDefault();if(!contactForm.reportValidity())return;
-    const button=contactForm.querySelector('button[type="submit"]'),status=document.getElementById('form-status'),original=button.textContent;
-    button.disabled=true;button.textContent='Enviando...';status.textContent='Enviando seu briefing...';status.classList.remove('form-error');
-    try{
-      const object=Object.fromEntries(new FormData(contactForm));if(object.botcheck)throw new Error('Spam detected');
-      const response=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(object)});
-      const result=await response.json().catch(()=>({}));
-      if(!response.ok||result.success!==true){if(response.status===429)throw new Error('RATE_LIMIT');throw new Error(result.message||'SUBMIT_FAILED')}
-      location.href='thanks.html';
-    }catch(error){button.disabled=false;button.textContent=original;status.textContent=error.message==='RATE_LIMIT'?'Muitas tentativas em pouco tempo. Aguarde um pouco e tente novamente.':'Não foi possível enviar agora. Tente novamente em alguns minutos.';status.classList.add('form-error')}
+  };
+  filterButtons.forEach(button=>{
+    button.setAttribute('aria-pressed',String(button.classList.contains('active')));
+    button.addEventListener('click',()=>applyFilter(button));
   });
 }
