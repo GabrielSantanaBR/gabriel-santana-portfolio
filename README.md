@@ -17,17 +17,18 @@ Site público: **https://gabrielsantanabr.github.io/gabriel-santana-portfolio/**
 
 ## Direção visual
 
-O site usa um design system próprio em verde escuro com referências de composição e interação estudadas em **Unlumen UI, GetLayers e MotionSites**. As referências são usadas como direção de design — hierarquia, profundidade, motion, bento layouts, navegação e atmosfera — sem copiar templates proprietários.
+O site usa um design system próprio em verde escuro com referências de composição e interação estudadas em **Unlumen UI, GetLayers e MotionSites**. As referências servem como direção de design — hierarquia, profundidade, motion, bento layouts, navegação e atmosfera — sem copiar templates proprietários.
 
-A implementação visual é dividida em:
+A implementação visual foi consolidada para reduzir conflitos e falhas de renderização:
 
 - `styles.css`: estrutura e componentes-base;
-- `backup-sites.css`: composição editorial/cinematográfica e acabamento inspirado nas referências salvas;
-- `video-effects.css`: galaxy ambience, ripple, spotlight, marquee, tipografia e microinterações;
-- `portfolio-proof.css`: seção de base profissional;
-- `effects.js`: animações e interações feitas com **Web Animations API, IntersectionObserver e Canvas nativos**.
+- `video-effects.css`: camada visual final unificada, com cores, layouts, cards, preços, formulário, galaxy ambience, spotlight, marquee e microinterações;
+- `portfolio-proof.css`: seção de base profissional da home;
+- `effects.js`: animações e interações com **Web Animations API, Canvas e APIs nativas do navegador**.
 
-O runtime visual não depende mais de bibliotecas JavaScript externas. A implementação respeita `prefers-reduced-motion`, limita densidade/DPR do canvas, pausa o efeito ambiente quando a aba fica oculta e mantém o conteúdo essencial no HTML mesmo sem JavaScript.
+A antiga camada `backup-sites.css` foi incorporada à camada visual final e removida para evitar regras duplicadas competindo pelos mesmos componentes.
+
+O runtime visual não depende de bibliotecas JavaScript externas. A implementação respeita `prefers-reduced-motion`, reduz efeitos em telas pequenas, limita densidade/DPR do canvas, pausa o efeito ambiente quando a aba fica oculta e evita esconder conteúdo já renderizado.
 
 ## Critério do portfólio
 
@@ -45,11 +46,11 @@ O Web3Forms é a única conexão externa permitida na página de contato. Detalh
 
 ## Publicação e validação
 
-O site é publicado no GitHub Pages a partir da branch `main`. O workflow em `.github/workflows/pages.yml` valida sintaxe JavaScript, arquivos obrigatórios, referências locais, CSP, ausência de scripts/estilos inline, links externos seguros, sitemap, fluxo do formulário, padrões comuns de segredos e rotas dos projetos antes do deploy.
+O site é publicado no GitHub Pages a partir da branch `main`. O workflow em `.github/workflows/pages.yml` valida sintaxe JavaScript, arquivos obrigatórios, referências locais, CSP, ausência de scripts/estilos inline, preview social, sistema visual unificado, produtos/preços, fluxo seguro de contato, sitemap, padrões comuns de segredos e rotas dos projetos antes do deploy.
 
 ## SEO e descoberta
 
-O repositório inclui `robots.txt`, `sitemap.xml`, metadados Open Graph na home e página 404 dedicada.
+O repositório inclui `robots.txt`, `sitemap.xml`, metadados Open Graph na home, imagem social 1200×630 e página 404 dedicada.
 
 ## Contato
 
