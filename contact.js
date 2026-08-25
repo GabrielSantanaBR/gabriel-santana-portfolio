@@ -90,7 +90,6 @@
     for (const [key, value] of data.entries()) {
       payload[key] = typeof value === 'string' ? cleanText(value, key === 'Descrição' ? 2500 : 160) : value;
     }
-    // Used only by the browser's default HTML submission when JavaScript is unavailable.
     delete payload.redirect;
     return payload;
   };
@@ -113,17 +112,17 @@
 
     const description = cleanText(payload['Descrição'], 2500);
     if (description.length < 30) {
-      messageField.setCustomValidity('Descreva o projeto com pelo menos 30 caracteres.');
+      messageField.setCustomValidity('Escreva uma mensagem com pelo menos 30 caracteres.');
       messageField.reportValidity();
       return;
     }
     messageField.setCustomValidity('');
 
     safeStorageSet('portfolio-contact-attempt', String(Date.now()));
-    const originalLabel = submitButton.textContent;
+    const originalLabel = submitButton.innerHTML;
     submitButton.disabled = true;
     submitButton.textContent = 'Enviando...';
-    status.textContent = 'Enviando seu briefing...';
+    status.textContent = 'Enviando sua mensagem...';
     status.classList.remove('form-error');
 
     const controller = new AbortController();
@@ -153,7 +152,7 @@
       location.assign('thanks.html');
     } catch (error) {
       submitButton.disabled = false;
-      submitButton.textContent = originalLabel;
+      submitButton.innerHTML = originalLabel;
       if (error.name === 'AbortError') {
         status.textContent = 'O envio demorou mais que o esperado. Verifique sua conexão e tente novamente.';
       } else if (error.message === 'RATE_LIMIT') {
