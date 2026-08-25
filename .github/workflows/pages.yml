@@ -31,11 +31,12 @@ jobs:
         run: |
           for file in \
             index.html project.html prices.html contact.html thanks.html 404.html \
-            styles.css video-effects.css backup-sites.css portfolio-proof.css \
+            styles.css video-effects.css portfolio-proof.css \
             script.js effects.js contact.js robots.txt sitemap.xml SECURITY.md \
             .well-known/security.txt assets/favicon.svg assets/portfolio-preview-v2.png; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
+          test ! -f backup-sites.css || { echo "Obsolete backup-sites.css must not return"; exit 1; }
 
       - name: Validate local HTML references and duplicate IDs
         run: |
@@ -107,15 +108,14 @@ jobs:
               audit = Audit(path)
               audit.feed(path.read_text(encoding='utf-8'))
               csp = audit.csp or ''
-              required = [
+              for directive in (
                   "script-src 'self'",
                   "style-src 'self'",
                   "object-src 'none'",
                   "base-uri 'none'",
                   "frame-src 'none'",
                   'upgrade-insecure-requests',
-              ]
-              for directive in required:
+              ):
                   if directive not in csp:
                       failures.append(f'{path}: CSP missing {directive}')
               if 'cdn.jsdelivr.net' in csp:
@@ -135,7 +135,6 @@ jobs:
 
           image_url = 'https://gabrielsantanabr.github.io/gabriel-santana-portfolio/assets/portfolio-preview-v2.png'
           image_path = Path('assets/portfolio-preview-v2.png')
-
           data = image_path.read_bytes()
           if data[:8] != b'\x89PNG\r\n\x1a\n':
               raise SystemExit('Social preview is not a valid PNG')
@@ -150,12 +149,10 @@ jobs:
                   super().__init__()
                   self.meta = {}
               def handle_starttag(self, tag, attrs):
-                  if tag != 'meta':
-                      return
+                  if tag != 'meta': return
                   data = dict(attrs)
                   key = data.get('property') or data.get('name')
-                  if key:
-                      self.meta[key] = data.get('content', '')
+                  if key: self.meta[key] = data.get('content', '')
 
           parser = MetaParser()
           parser.feed(Path('index.html').read_text(encoding='utf-8'))
@@ -174,10 +171,10 @@ jobs:
               actual = parser.meta.get(key)
               if actual != expected:
                   raise SystemExit(f'{key} invalid: {actual!r}')
-          print(f'Social preview OK: {width}x{height}, {image_path.stat().st_size} bytes')
+          print(f'Social preview OK: {width}x{height}')
           PY
 
-      - name: Validate local-only visual runtime
+      - name: Validate unified visual system
         run: |
           if grep -Rni 'cdn.jsdelivr.net' --include='*.html' --include='*.js' .; then
             echo 'Third-party JavaScript runtime detected.'
@@ -187,21 +184,41 @@ jobs:
             echo 'effects.js must stay dependency-free.'
             exit 1
           fi
-          grep -q 'prefers-reduced-motion' effects.js
+          if grep -q 'backup-sites.css' video-effects.css; then
+            echo 'Old visual import returned.'
+            exit 1
+          fi
+          grep -q 'Unified premium UI layer' video-effects.css
           grep -q 'prefers-reduced-motion' video-effects.css
-          grep -q 'prefers-reduced-motion' backup-sites.css
+          grep -q 'prefers-reduced-motion' effects.js
           grep -q 'nav-motion-pill' effects.js
           grep -q 'filter-motion-pill' effects.js
+          grep -q 'pricing-grid' video-effects.css
+          grep -q 'contact-form' video-effects.css
+          grep -q 'field select option' video-effects.css
+          grep -q 'motion-reveal.is-visible' video-effects.css
 
-      - name: Validate contact security flow
+      - name: Validate products and project routes
+        run: |
+          grep -q 'WEB & PRODUTOS' prices.html
+          grep -q 'ClientFlow' prices.html
+          grep -q 'MVP / sistema personalizado' prices.html
+          for id in clientflow decisionforge curtailment finance pricing institutional csv riftpilot; do
+            grep -q "id=$id" index.html
+            grep -q "$id:{" script.js
+          done
+
+      - name: Validate contact security and message flow
         run: |
           grep -q 'id="secure-contact-form"' contact.html
+          grep -q 'id="form-status"' contact.html
           grep -q 'contact.js' contact.html
           grep -q "credentials: 'omit'" contact.js
           grep -q "referrerPolicy: 'no-referrer'" contact.js
           grep -q 'AbortController' contact.js
           grep -q 'botcheck' contact.html
           grep -q 'https://api.web3forms.com' contact.html
+          grep -q 'messageField' contact.js
 
       - name: Validate sitemap and crawler files
         run: |
@@ -225,13 +242,6 @@ jobs:
             echo 'Potential privileged secret detected.'
             exit 1
           fi
-
-      - name: Check portfolio project routes
-        run: |
-          for id in clientflow decisionforge curtailment finance pricing institutional csv riftpilot; do
-            grep -q "id=$id" index.html
-            grep -q "$id:{" script.js
-          done
 
   deploy:
     needs: validate
