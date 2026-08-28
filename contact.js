@@ -42,9 +42,12 @@
   const mappedService = serviceMap[params.get('service')];
   if (mappedService && serviceField) serviceField.value = mappedService;
 
-  const requestedProject = cleanText(params.get('project'), 80);
-  if (requestedProject && messageField) {
-    messageField.value = `Tenho interesse em um projeto semelhante ao ${requestedProject}. `;
+  const requestedProject = cleanText(params.get('project'), 100);
+  const requestedPlan = cleanText(params.get('plan'), 60);
+  if (messageField && (requestedProject || requestedPlan)) {
+    const projectText = requestedProject ? `Tenho interesse em ${requestedProject}` : 'Tenho interesse neste serviço';
+    const planText = requestedPlan ? `, usando o pacote ${requestedPlan} como referência inicial` : '';
+    messageField.value = `${projectText}${planText}. Entendo que o valor exibido é apenas uma base e pode mudar conforme o escopo final. `;
   }
 
   const contactConfig = Object.freeze({
