@@ -1,64 +1,46 @@
-const year=document.getElementById('year');if(year)year.textContent=new Date().getFullYear();
+(() => {
+  'use strict';
 
-const visuals={
-clientflow:'<div class="cf-preview"><div class="cf-side"><b>CF</b><i></i><i></i><i></i><i></i></div><div class="cf-main"><div class="cf-head"><b>ClientFlow</b><span>Agenda de hoje</span></div><div class="cf-kpis"><div><small>Atendimentos</small><strong>4</strong></div><div><small>Receita</small><strong>R$ 335</strong></div><div><small>Clientes</small><strong>5</strong></div></div><div class="cf-agenda"><span><b>09:30</b> Lucas Almeida <i>Confirmado</i></span><span><b>11:00</b> Rafael Costa <i>Confirmado</i></span><span><b>14:30</b> Bruno Martins <i>Pendente</i></span></div></div></div>',
-decisionforge:'<div class="decision-preview"><div class="decision-head"><b>DecisionForge AI</b><span>Executive analysis</span></div><div class="decision-score"><div><small>DATA QUALITY</small><strong>94.8</strong><span>/100</span></div><div class="decision-ring"><i></i></div></div><div class="decision-signals"><span><i></i><b>3</b> anomalias críticas</span><span><i></i><b>4</b> drivers relevantes</span><span><i></i><b>+6.2%</b> forecast</span></div><div class="mini-forecast"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>',
-curtailment:'<div class="curtail-preview"><div class="curtail-head"><b>Curtailment Intelligence</b><span>Renewable operations</span></div><div class="risk-row"><div><small>RISCO</small><strong>72%</strong><span>próximas 6h</span></div><div><small>ENERGIA</small><strong>18.4</strong><span>MWh em risco</span></div></div><div class="power-line"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="impact-chip"><span>Otimização</span><b>+11.2 MWh recuperáveis</b></div></div>',
-finance:'<div class="ui-window"><div class="ui-top"><b>Finance Manager</b><span>Visão mensal</span></div><div class="ui-body"><aside><b>FM</b><span>Visão geral</span><span>Lançamentos</span><span>Relatórios</span></aside><section><div class="ui-kpis"><div><small>Receitas</small><strong>R$ 18,4k</strong></div><div><small>Despesas</small><strong>R$ 11,2k</strong></div><div><small>Saldo</small><strong>R$ 7,2k</strong></div></div><div class="clean-chart"><div></div><div></div><div></div><div></div><div></div><div></div></div></section></div></div>',
-pricing:'<div class="sheet-preview"><div class="sheet-title"><b>Pricing & Sales</b><span>Resumo comercial</span></div><div class="sheet-metrics"><div><small>Receita</small><strong>R$ 8.960</strong></div><div><small>Lucro</small><strong>R$ 3.210</strong></div><div><small>Margem</small><strong>35,8%</strong></div></div><div class="real-table"><div class="table-head"><span>Produto</span><span>Custo</span><span>Venda</span><span>Margem</span></div><div><span>Produto A</span><span>R$ 4,20</span><span>R$ 9,00</span><span>53%</span></div><div><span>Produto B</span><span>R$ 22,80</span><span>R$ 48,00</span><span>52%</span></div><div><span>Produto C</span><span>R$ 3,10</span><span>R$ 7,00</span><span>56%</span></div></div></div>',
-institutional:'<div class="browser-preview"><div class="browser-toolbar"><i></i><i></i><i></i><span>empresa.local</span></div><div class="browser-content"><nav><b>Marca</b><span>Início</span><span>Sobre</span><span>Conteúdo</span><span>Contato</span></nav><div class="site-hero"><small>SITE INSTITUCIONAL</small><strong>Conteúdo claro e administrável.</strong><span class="mock-button">Saiba mais</span></div><div class="site-cards"><article><b>Sobre</b><small>Institucional</small></article><article><b>Agenda</b><small>Conteúdo</small></article><article><b>Contato</b><small>Formulário</small></article></div></div></div>',
-csv:'<div class="analytics-preview"><div class="analytics-title"><b>Sales Analysis</b><span>Produtos</span></div><div class="analytics-layout"><div><div class="axis-chart"><span>10k</span><span>5k</span><span>0</span><div class="bars"><i></i><i></i><i></i><i></i></div></div><div class="chart-labels"><span>A</span><span>B</span><span>C</span><span>D</span></div></div><div class="analytics-ranking"><small>Ranking</small><span><b>1</b> Produto D</span><span><b>2</b> Produto B</span><span><b>3</b> Produto C</span></div></div></div>',
-riftpilot:'<div class="rift-preview"><div class="rift-head"><b>RiftPilot</b><span>Analytics</span></div><div class="rift-body"><div class="rift-board"><div class="lane top"></div><div class="lane mid"></div><div class="lane bottom"></div><span class="point p1"></span><span class="point p2"></span><span class="point p3"></span></div><div class="rift-insights"><small>LEITURA ATUAL</small><strong>Priorize objetivo</strong><div><span>Risco</span><b>Médio</b></div><div><span>Build</span><b>Defensiva</b></div></div></div></div>'
-};
+  const year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
 
-const projects={
-clientflow:{title:'ClientFlow',status:'PRODUTO COMERCIAL',visual:'clientflow-visual',visualHtml:visuals.clientflow,summary:'Sistema demonstrável de agendamento, clientes, serviços, orçamentos e atendimento para pequenos negócios de serviços.',problem:'Muitos negócios ainda coordenam horários, clientes e orçamentos em conversas separadas no WhatsApp ou Instagram. Isso gera retrabalho, esquecimento de follow-up e pouca visão da operação.',solution:'Produto responsivo com dashboard, agenda, CRM de clientes, catálogo de serviços, orçamentos, mensagens prontas e página pública de agendamento. A demo funciona sem backend para permitir testes imediatos.',features:['Dashboard operacional','Agenda e status de atendimentos','Cadastro de clientes e serviços','Orçamentos e follow-up','Atalhos e mensagens para WhatsApp','Página pública de agendamento','PWA e backup da demonstração'],current:'Demo funcional pública. A versão comercial pode evoluir para autenticação, banco persistente, múltiplos profissionais, pagamentos e integrações oficiais.',tech:['JavaScript','Responsive UI','CRM','Scheduling','PWA','LocalStorage'],repo:'https://github.com/GabrielSantanaBR/clientflow',demo:'https://gabrielsantanabr.github.io/clientflow/',service:'clientflow'},
-decisionforge:{title:'DecisionForge AI',status:'DECISION INTELLIGENCE',visual:'decision-visual',visualHtml:visuals.decisionforge,summary:'Plataforma full-stack que transforma CSV/XLSX em análise executiva explicável, combinando qualidade de dados, Machine Learning, previsão e recomendações.',problem:'Bases de negócio podem conter dados incompletos, anomalias e relações difíceis de detectar manualmente. Dashboards tradicionais mostram o que aconteceu, mas nem sempre ajudam a explicar por quê ou o que merece atenção.',solution:'Pipeline modular com inferência semântica, qualidade de dados, Isolation Forest, K-Means com seleção por silhouette, Mutual Information, correlação, Random Forest para forecasting e uma camada de insights explicáveis.',features:['Ingestão de CSV e XLSX','Data Quality Engine','Detecção de anomalias com Isolation Forest','Segmentação com K-Means','Driver analysis com Mutual Information','Forecasting com Random Forest','Copiloto local e LLM opcional','API FastAPI, Docker, testes e CI'],current:'Projeto público funcional de portfólio com dataset sintético determinístico e inteligência principal executada localmente, sem depender de API paga.',tech:['Python','FastAPI','Pandas','scikit-learn','OpenPyXL','Docker'],repo:'https://github.com/GabrielSantanaBR/decisionforge-ai',service:'ai'},
-curtailment:{title:'Curtailment Intelligence',status:'AI + ENERGIA',visual:'curtailment-visual',visualHtml:visuals.curtailment,summary:'Plataforma de apoio à decisão para entender, prever e mitigar curtailment em geração renovável.',problem:'Restrições de geração eólica e solar exigem entender padrões temporais e operacionais, antecipar risco e avaliar respostas sob restrições técnicas reais.',solution:'Backend FastAPI com persistência, geração de dados sintéticos, modelos de classificação e regressão, explicabilidade local, otimização linear de bateria/carga flexível e módulo de impacto.',features:['Predição de risco de curtailment','Estimativa de energia restringida','Métricas PR-AUC, ROC-AUC, F1 e calibração','Explicação de drivers','Otimização com programação linear','Impacto em MWh e valor preservado','Adapter para dados públicos do ONS','Docker, testes e CI'],current:'Base pré-hackathon funcional e preparada para transição dos dados sintéticos para dados oficiais, mantendo separação explícita entre demonstração e medições reais.',tech:['Python','FastAPI','SQLAlchemy','scikit-learn','SciPy','PostgreSQL'],repo:'https://github.com/GabrielSantanaBR/curtailment-intelligence',service:'ai'},
-finance:{title:'Finance Manager',status:'SISTEMA FINANCEIRO',visual:'finance-visual',visualHtml:visuals.finance,summary:'Sistema web de gestão financeira para pequenas organizações e equipes.',problem:'Controles financeiros descentralizados, aprovações manuais e dificuldade de consolidar receitas, despesas, comprovantes, contas e relatórios em um único fluxo.',solution:'Aplicação Django com modelagem relacional, usuários com níveis de acesso, fluxo de aprovação, lançamentos recorrentes, dashboard e relatórios.',features:['Autenticação e permissões por perfil','Receitas, despesas e contas financeiras','Fluxo de aprovação e auditoria','Dashboards e relatórios','Exportação e automação de rotinas'],current:'Versão pública genérica disponível como case de portfólio.',tech:['Python','Django','PostgreSQL','Bootstrap','Chart.js'],repo:'https://github.com/GabrielSantanaBR/finance-manager',service:'finance'},
-pricing:{title:'Pricing & Sales Manager',status:'DADOS + NEGÓCIO',visual:'pricing-visual',visualHtml:visuals.pricing,summary:'Solução de precificação e análise comercial baseada em uma operação real, reconstruída com dados fictícios para apresentação pública.',problem:'Custos, rendimento, margem, preço e vendas precisavam conversar entre si e ser consolidados em uma única visão.',solution:'Modelo centralizado de insumos e receitas com fórmulas encadeadas, precificação por margem, registro de vendas e dashboard comercial.',features:['Custo unitário de insumos','Receitas e componentes reutilizáveis','Margem e preço sugerido','Vendas por canal','KPIs e dashboard comercial'],current:'Demo pública com valores e produtos fictícios.',tech:['Excel','Data Modeling','Pricing','Business Analytics','Python'],repo:'https://github.com/GabrielSantanaBR/bakery-manager',service:'spreadsheet'},
-institutional:{title:'Institutional Site Template',status:'FULL-STACK',visual:'site-visual',visualHtml:visuals.institutional,summary:'Template institucional full-stack para empresas e organizações que precisam de presença digital e conteúdo administrável.',problem:'Sites institucionais frequentemente ficam dependentes do desenvolvedor para pequenas mudanças e perdem consistência conforme novos conteúdos são adicionados.',solution:'Arquitetura reutilizável com páginas públicas, conteúdo dinâmico, estrutura administrativa e formulário protegido.',features:['Páginas responsivas','Conteúdo dinâmico','Estrutura administrativa','Formulário protegido','Base reutilizável para diferentes segmentos'],current:'Versão genérica pública criada a partir de um projeto real.',tech:['TypeScript','React','Next.js','Cloudflare D1'],repo:'https://github.com/GabrielSantanaBR/institutional-site-template',service:'site-panel'},
-csv:{title:'CSV Sales Analyzer',status:'ANÁLISE DE DADOS',visual:'analytics-visual',visualHtml:visuals.csv,summary:'Pipeline em Python para transformar uma base CSV de vendas em métricas, rankings, relatórios e visualizações.',problem:'Arquivos de vendas isolados dizem pouco sem tratamento, validação e indicadores de negócio.',solution:'Fluxo modular que lê CSV, valida dados, calcula métricas, exporta resultados e gera gráficos automaticamente.',features:['Limpeza e validação','Faturamento e volume vendido','Ranking de produtos','Exportação Excel/CSV','Gráficos automáticos'],current:'Projeto público funcional de análise de dados.',tech:['Python','Pandas','Matplotlib','OpenPyXL'],repo:'https://github.com/GabrielSantanaBR/csv-sales-analyzer',service:'data'},
-riftpilot:{title:'RiftPilot',status:'EM DESENVOLVIMENTO',visual:'rift-visual',visualHtml:visuals.riftpilot,summary:'Assistente analítico para League of Legends com serviço local de analytics e recomendações explicáveis.',problem:'Decisões de matchup, itens, objetivos e rotações dependem do estado atual da partida e mudam rapidamente.',solution:'Arquitetura incremental para normalizar o estado observável, aplicar regras explicáveis e evoluir para modelos estatísticos quando houver dados adequados.',features:['Serviço local FastAPI','Modelos Pydantic','Testes e linting','Arquitetura documentada','Roadmap de analytics'],current:'Fundação técnica em andamento.',tech:['Python 3.13','FastAPI','Pydantic','Pytest','Ruff'],repo:'https://github.com/GabrielSantanaBR/riftpilot',service:'custom'}
-};
-
-const detail=document.getElementById('project-detail');
-if(detail){
-  const requestedId=new URLSearchParams(location.search).get('id')||'clientflow';
-  const p=projects[requestedId]||projects.clientflow;
-  document.title=`${p.title} — Gabriel Santana`;
-  const metaDescription=document.querySelector('meta[name="description"]');
-  if(metaDescription)metaDescription.setAttribute('content',p.summary);
-  document.getElementById('project-title').textContent=p.title;
-  document.getElementById('project-breadcrumb').textContent=p.title;
-  document.getElementById('project-status').textContent=p.status;
-  document.getElementById('project-summary').textContent=p.summary;
-  document.getElementById('project-problem').textContent=p.problem;
-  document.getElementById('project-solution').textContent=p.solution;
-  document.getElementById('project-current').textContent=p.current;
-  const repoButton=document.getElementById('project-repo');repoButton.href=p.repo;
-  const demoButton=document.getElementById('project-demo');
-  if(demoButton){if(p.demo){demoButton.href=p.demo;demoButton.hidden=false}else demoButton.hidden=true}
-  document.getElementById('project-contact').href=`contact.html?service=${encodeURIComponent(p.service)}&project=${encodeURIComponent(p.title)}`;
-  const visual=document.getElementById('project-visual');visual.classList.add(p.visual);visual.innerHTML=p.visualHtml+'<span class="visual-caption">Representação visual do projeto</span>';
-  document.getElementById('project-tech').replaceChildren(...p.tech.map(t=>{const s=document.createElement('span');s.textContent=t;return s}));
-  document.getElementById('project-features').replaceChildren(...p.features.map(f=>{const l=document.createElement('li');l.textContent=f;return l}));
-}
-
-const filterButtons=[...document.querySelectorAll('.filter-button')];
-if(filterButtons.length){
-  const cards=[...document.querySelectorAll('.project-card[data-category]')];
-  const applyFilter=(button)=>{
-    filterButtons.forEach(item=>{
-      const selected=item===button;
-      item.classList.toggle('active',selected);
-      item.setAttribute('aria-pressed',String(selected));
+  const filters = [...document.querySelectorAll('.filter-button')];
+  const cards = [...document.querySelectorAll('.project-card[data-category]')];
+  if (filters.length && cards.length) {
+    filters.forEach((button) => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter || 'all';
+        filters.forEach((item) => {
+          const active = item === button;
+          item.classList.toggle('active', active);
+          item.setAttribute('aria-pressed', String(active));
+        });
+        cards.forEach((card) => {
+          const categories = (card.dataset.category || '').split(/\s+/);
+          card.hidden = filter !== 'all' && !categories.includes(filter);
+        });
+      });
     });
-    const filter=button.dataset.filter||'all';
-    cards.forEach(card=>{card.hidden=filter!=='all'&&!card.dataset.category.split(' ').includes(filter)});
-  };
-  filterButtons.forEach(button=>{
-    button.setAttribute('aria-pressed',String(button.classList.contains('active')));
-    button.addEventListener('click',()=>applyFilter(button));
-  });
-}
+  }
+
+  const legacy = document.querySelector('[data-legacy-project]');
+  if (legacy) {
+    const routes = Object.freeze({
+      clientflow: 'clientflow.html',
+      decisionforge: 'decisionforge-ai.html',
+      curtailment: 'curtailment-intelligence.html',
+      finance: 'gestao-financeira.html',
+      pricing: 'precificacao-vendas.html',
+      institutional: 'site-institucional-painel.html',
+      csv: 'analise-vendas.html',
+      riftpilot: 'riftpilot.html'
+    });
+    const id = new URLSearchParams(location.search).get('id');
+    const target = routes[id] || 'index.html#projetos';
+    const link = document.getElementById('legacy-project-link');
+    if (link) link.href = target;
+    const message = document.getElementById('legacy-project-message');
+    if (message) message.textContent = id && routes[id] ? 'Esse projeto agora tem uma página própria.' : 'Escolha um projeto na nova vitrine.';
+    if (id && routes[id]) location.replace(target);
+  }
+})();
