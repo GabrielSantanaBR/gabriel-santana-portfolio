@@ -4,6 +4,14 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
+  /* Pricing has an isolated layout so global portfolio CSS cannot distort it. */
+  if (document.querySelector('.pricing-page') && !document.querySelector('link[href="pricing.css"]')) {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = 'pricing.css';
+    document.head.appendChild(stylesheet);
+  }
+
   const filters = [...document.querySelectorAll('.filter-button')];
   const cards = [...document.querySelectorAll('.project-card[data-category]')];
   if (filters.length && cards.length) {
