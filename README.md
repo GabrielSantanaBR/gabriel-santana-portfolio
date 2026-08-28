@@ -1,58 +1,76 @@
 # Gabriel Santana — Portfolio
 
-Portfólio profissional com foco em **Dados, desenvolvimento de software, automação e Inteligência Artificial aplicada**.
+Portfólio profissional com foco em **sistemas, dados, automação e Inteligência Artificial aplicada**.
 
 Site público: **https://gabrielsantanabr.github.io/gabriel-santana-portfolio/**
 
-## Projetos em destaque
+## Posicionamento
 
-- **[ClientFlow](https://github.com/GabrielSantanaBR/clientflow)** — produto demonstrável para agenda, clientes, serviços, orçamentos e atendimento de pequenos negócios.
-- **[DecisionForge AI](https://github.com/GabrielSantanaBR/decisionforge-ai)** — decision intelligence para CSV/XLSX com data quality, anomalias, segmentação, driver analysis, forecasting e insights explicáveis.
-- **[Curtailment Intelligence](https://github.com/GabrielSantanaBR/curtailment-intelligence)** — previsão, explicabilidade e otimização de cenários para curtailment em geração renovável.
-- **[Finance Manager](https://github.com/GabrielSantanaBR/finance-manager)** — sistema financeiro genérico em Django com regras de negócio, permissões, relatórios e auditoria.
-- **[Pricing & Sales Manager](https://github.com/GabrielSantanaBR/bakery-manager)** — case de precificação e análise comercial com custos, margem, vendas e dashboard.
-- **[Institutional Site Template](https://github.com/GabrielSantanaBR/institutional-site-template)** — template institucional full-stack com conteúdo dinâmico e arquitetura administrativa.
-- **[CSV Sales Analyzer](https://github.com/GabrielSantanaBR/csv-sales-analyzer)** — pipeline de análise de vendas com Python, Pandas, exportações e visualizações.
-- **[RiftPilot](https://github.com/GabrielSantanaBR/riftpilot)** — assistente analítico em desenvolvimento com backend FastAPI e arquitetura para recomendações explicáveis.
+> Transformo processos manuais em soluções digitais.
 
-## Direção visual
+A vitrine prioriza **o problema resolvido e o resultado entregue**. Os nomes técnicos continuam visíveis como marca/projeto, mas a comunicação principal explica o que cada solução faz.
 
-O site usa um design system próprio em verde escuro com referências de composição e interação estudadas em **Unlumen UI, GetLayers e MotionSites**. As referências servem como direção de design — hierarquia, profundidade, motion, bento layouts, navegação e atmosfera — sem copiar templates proprietários.
+## Projetos selecionados
 
-A implementação visual foi consolidada para reduzir conflitos e falhas de renderização:
+- **Agenda e CRM para Serviços — ClientFlow**: agenda, clientes, serviços, orçamentos e atendimento em um fluxo único.
+- **Análise Inteligente de Dados — DecisionForge AI**: qualidade de dados, anomalias, segmentação, drivers, forecasting e insights explicáveis.
+- **IA para Risco Energético — Curtailment Intelligence**: previsão, explicabilidade e otimização para curtailment em geração renovável.
+- **Sistema de Gestão Financeira — Finance Manager**: receitas, despesas, aprovações, permissões, auditoria e relatórios.
+- **Precificação e Análise de Vendas — Pricing & Sales Manager**: custos, rendimento, margem, preço e indicadores comerciais conectados.
+- **Site Institucional com Painel — Institutional Site Template**: presença digital responsiva com conteúdo administrável.
+- **Análise Automatizada de Vendas — CSV Sales Analyzer**: pipeline de limpeza, métricas, rankings, exportações e gráficos.
+- **Assistente Analítico para League of Legends — RiftPilot**: projeto experimental de recomendações contextuais e explicáveis.
 
-- `styles.css`: estrutura e componentes-base;
-- `video-effects.css`: camada visual final unificada, com cores, layouts, cards, preços, formulário, galaxy ambience, spotlight, marquee e microinterações;
-- `portfolio-proof.css`: seção de base profissional da home;
-- `effects.js`: animações e interações com **Web Animations API, Canvas e APIs nativas do navegador**.
+## Páginas próprias
 
-A antiga camada `backup-sites.css` foi incorporada à camada visual final e removida para evitar regras duplicadas competindo pelos mesmos componentes.
+Cada projeto possui uma URL independente, metadados próprios e uma experiência interativa com quatro visões:
 
-O runtime visual não depende de bibliotecas JavaScript externas. A implementação respeita `prefers-reduced-motion`, reduz efeitos em telas pequenas, limita densidade/DPR do canvas, pausa o efeito ambiente quando a aba fica oculta e evita esconder conteúdo já renderizado.
+1. **Visão geral** — problema e solução.
+2. **Como funciona** — fluxo simplificado em três etapas.
+3. **Tecnologia** — arquitetura e stack.
+4. **Evolução** — próximos passos e possibilidades comerciais/técnicas.
 
-## Critério do portfólio
+As páginas também incluem preview visual do produto, CTA para contato, repositório e navegação para o próximo projeto.
 
-Projetos derivados de trabalhos ou necessidades reais são publicados apenas em versões genéricas e anonimizadas. Exercícios de cursos, forks e repositórios de terceiros não são tratados como projetos principais.
+## Estrutura visual
 
-## Tecnologias destacadas
+- `styles.css`: componentes e previews técnicos já existentes.
+- `video-effects.css`: microinterações e acabamento visual.
+- `portfolio-proof.css`: seção de base profissional da home.
+- `identity.css`: **camada final de identidade clean**, responsável por cores, hierarquia, espaçamento, cards, preços, formulário e páginas de produto.
+- `effects.js`: animações com APIs nativas do navegador.
+- `product.js`: conteúdo e interações das páginas próprias.
+- `script.js`: utilidades leves, filtros da home e compatibilidade com URLs antigas.
 
-Python, SQL, Django, FastAPI, PostgreSQL, SQLAlchemy, Pandas, scikit-learn, SciPy, Excel, OpenPyXL, JavaScript/TypeScript, React, Next.js, HTML e CSS.
+A identidade atual usa verde escuro, superfícies discretas, contraste controlado e menos efeitos competindo com o conteúdo. O motion respeita `prefers-reduced-motion` e não depende de bibliotecas JavaScript externas.
 
 ## Segurança
 
-O portfólio é estático e não possui banco de dados ou autenticação própria. A configuração inclui CSP restritiva com scripts locais, validação e normalização do formulário, honeypot, timeout, cooldown de envio, `credentials: omit`, `referrerPolicy: no-referrer`, 404 própria e `security.txt`.
+O portfólio é estático e mantém CSP restritiva, scripts locais, links externos protegidos, validação do formulário, honeypot, timeout e checagens automáticas antes do deploy. O Web3Forms é a única conexão externa permitida na página de contato.
 
-O Web3Forms é a única conexão externa permitida na página de contato. Detalhes estão em [`SECURITY.md`](SECURITY.md).
+Detalhes: [`SECURITY.md`](SECURITY.md).
 
 ## Publicação e validação
 
-O site é publicado no GitHub Pages a partir da branch `main`. O workflow em `.github/workflows/pages.yml` valida sintaxe JavaScript, arquivos obrigatórios, referências locais, CSP, ausência de scripts/estilos inline, preview social, sistema visual unificado, produtos/preços, fluxo seguro de contato, sitemap, padrões comuns de segredos e rotas dos projetos antes do deploy.
+O GitHub Actions bloqueia o deploy se houver:
 
-## SEO e descoberta
+- JavaScript inválido;
+- arquivo ou link local quebrado;
+- IDs HTML duplicados;
+- CSP inconsistente;
+- script/estilo inline não permitido;
+- página de produto ausente;
+- retorno de links antigos `project.html?id=...` na home;
+- sitemap desatualizado;
+- fluxo de contato incompleto;
+- padrões comuns de segredos privilegiados.
 
-O repositório inclui `robots.txt`, `sitemap.xml`, metadados Open Graph na home, imagem social 1200×630 e página 404 dedicada.
+## SEO e compartilhamento
+
+O repositório inclui `robots.txt`, `sitemap.xml`, canonical URLs, Open Graph, imagem social 1200×630, página 404 e compatibilidade para os antigos links `project.html?id=...`.
 
 ## Contato
 
+- [Portfólio](https://gabrielsantanabr.github.io/gabriel-santana-portfolio/)
 - [GitHub](https://github.com/GabrielSantanaBR)
 - [LinkedIn](https://www.linkedin.com/in/gabriel-santana-b3654622a/)
