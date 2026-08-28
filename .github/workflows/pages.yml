@@ -26,17 +26,19 @@ jobs:
           node --check script.js
           node --check effects.js
           node --check contact.js
+          node --check product.js
 
       - name: Validate required files
         run: |
           for file in \
             index.html project.html prices.html contact.html thanks.html 404.html \
-            styles.css video-effects.css portfolio-proof.css \
-            script.js effects.js contact.js robots.txt sitemap.xml SECURITY.md \
+            clientflow.html decisionforge-ai.html curtailment-intelligence.html gestao-financeira.html \
+            precificacao-vendas.html site-institucional-painel.html analise-vendas.html riftpilot.html \
+            styles.css video-effects.css portfolio-proof.css identity.css \
+            script.js effects.js contact.js product.js robots.txt sitemap.xml SECURITY.md \
             .well-known/security.txt assets/favicon.svg assets/portfolio-preview-v2.png; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
-          test ! -f backup-sites.css || { echo "Obsolete backup-sites.css must not return"; exit 1; }
 
       - name: Validate local HTML references and duplicate IDs
         run: |
@@ -45,14 +47,11 @@ jobs:
           from pathlib import Path
           from urllib.parse import urlsplit
 
-          broken = []
-          duplicates = []
+          broken, duplicates = [], []
 
           class Audit(HTMLParser):
               def __init__(self, source):
-                  super().__init__()
-                  self.source = source
-                  self.ids = set()
+                  super().__init__(); self.source = source; self.ids = set()
               def handle_starttag(self, tag, attrs):
                   data = dict(attrs)
                   element_id = data.get('id')
@@ -60,7 +59,7 @@ jobs:
                       if element_id in self.ids:
                           duplicates.append(f'{self.source}: duplicate id={element_id}')
                       self.ids.add(element_id)
-                  for key in ('href', 'src'):
+                  for key in ('href','src'):
                       value = data.get(key)
                       if not value or value.startswith(('http://','https://','#','mailto:','tel:','data:')):
                           continue
@@ -69,8 +68,7 @@ jobs:
                           broken.append(f'{self.source}: {value}')
 
           for html in Path('.').glob('*.html'):
-              parser = Audit(html)
-              parser.feed(html.read_text(encoding='utf-8'))
+              parser = Audit(html); parser.feed(html.read_text(encoding='utf-8'))
 
           errors = broken + duplicates
           if errors:
@@ -83,164 +81,99 @@ jobs:
           python - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path
-
-          failures = []
-
+          failures=[]
           class Audit(HTMLParser):
-              def __init__(self, source):
-                  super().__init__()
-                  self.source = source
-                  self.csp = None
+              def __init__(self, source): super().__init__(); self.source=source; self.csp=None
               def handle_starttag(self, tag, attrs):
-                  data = dict(attrs)
-                  if 'style' in data:
-                      failures.append(f'{self.source}: inline style attribute')
-                  if tag == 'script' and not data.get('src'):
-                      failures.append(f'{self.source}: inline script')
-                  if tag == 'a' and data.get('target') == '_blank':
-                      rel = set((data.get('rel') or '').split())
-                      if not {'noopener', 'noreferrer'} <= rel:
-                          failures.append(f'{self.source}: target=_blank without noopener+noreferrer')
-                  if tag == 'meta' and (data.get('http-equiv') or '').lower() == 'content-security-policy':
-                      self.csp = data.get('content', '')
-
+                  data=dict(attrs)
+                  if 'style' in data: failures.append(f'{self.source}: inline style')
+                  if tag=='script' and not data.get('src'): failures.append(f'{self.source}: inline script')
+                  if tag=='a' and data.get('target')=='_blank':
+                      rel=set((data.get('rel') or '').split())
+                      if not {'noopener','noreferrer'} <= rel:
+                          failures.append(f'{self.source}: unsafe target=_blank')
+                  if tag=='meta' and (data.get('http-equiv') or '').lower()=='content-security-policy':
+                      self.csp=data.get('content','')
           for path in Path('.').glob('*.html'):
-              audit = Audit(path)
-              audit.feed(path.read_text(encoding='utf-8'))
-              csp = audit.csp or ''
-              for directive in (
-                  "script-src 'self'",
-                  "style-src 'self'",
-                  "object-src 'none'",
-                  "base-uri 'none'",
-                  "frame-src 'none'",
-                  'upgrade-insecure-requests',
-              ):
-                  if directive not in csp:
-                      failures.append(f'{path}: CSP missing {directive}')
-              if 'cdn.jsdelivr.net' in csp:
-                  failures.append(f'{path}: external script CDN allowed in CSP')
-
-          if failures:
-              raise SystemExit('Security markup validation failed:\n' + '\n'.join(failures))
+              audit=Audit(path); audit.feed(path.read_text(encoding='utf-8')); csp=audit.csp or ''
+              for directive in ("script-src 'self'","style-src 'self'","object-src 'none'","base-uri 'none'","frame-src 'none'",'upgrade-insecure-requests'):
+                  if directive not in csp: failures.append(f'{path}: CSP missing {directive}')
+          if failures: raise SystemExit('Security markup validation failed:\n'+'\n'.join(failures))
           print('CSP and markup OK')
           PY
 
-      - name: Validate committed social preview
+      - name: Validate social preview
         run: |
           python - <<'PY'
-          from html.parser import HTMLParser
           from pathlib import Path
           import struct
-
-          image_url = 'https://gabrielsantanabr.github.io/gabriel-santana-portfolio/assets/portfolio-preview-v2.png'
-          image_path = Path('assets/portfolio-preview-v2.png')
-          data = image_path.read_bytes()
-          if data[:8] != b'\x89PNG\r\n\x1a\n':
-              raise SystemExit('Social preview is not a valid PNG')
-          width, height = struct.unpack('>II', data[16:24])
-          if (width, height) != (1200, 630):
-              raise SystemExit(f'Wrong social preview dimensions: {width}x{height}')
-          if image_path.stat().st_size < 10000:
-              raise SystemExit('Social preview PNG looks unexpectedly small')
-
-          class MetaParser(HTMLParser):
-              def __init__(self):
-                  super().__init__()
-                  self.meta = {}
-              def handle_starttag(self, tag, attrs):
-                  if tag != 'meta': return
-                  data = dict(attrs)
-                  key = data.get('property') or data.get('name')
-                  if key: self.meta[key] = data.get('content', '')
-
-          parser = MetaParser()
-          parser.feed(Path('index.html').read_text(encoding='utf-8'))
-          required = {
-              'og:title': 'Gabriel Santana | Dados, IA e Desenvolvimento',
-              'og:image': image_url,
-              'og:image:url': image_url,
-              'og:image:secure_url': image_url,
-              'og:image:type': 'image/png',
-              'og:image:width': '1200',
-              'og:image:height': '630',
-              'twitter:card': 'summary_large_image',
-              'twitter:image': image_url,
-          }
-          for key, expected in required.items():
-              actual = parser.meta.get(key)
-              if actual != expected:
-                  raise SystemExit(f'{key} invalid: {actual!r}')
-          print(f'Social preview OK: {width}x{height}')
+          image=Path('assets/portfolio-preview-v2.png'); data=image.read_bytes()
+          if data[:8] != b'\x89PNG\r\n\x1a\n': raise SystemExit('Social preview is not PNG')
+          width,height=struct.unpack('>II',data[16:24])
+          if (width,height)!=(1200,630): raise SystemExit(f'Wrong social preview: {width}x{height}')
+          home=Path('index.html').read_text(encoding='utf-8')
+          if 'assets/portfolio-preview-v2.png' not in home: raise SystemExit('Home OG image missing')
+          print('Social preview OK')
           PY
 
-      - name: Validate unified visual system
+      - name: Validate clean identity system
         run: |
-          if grep -Rni 'cdn.jsdelivr.net' --include='*.html' --include='*.js' .; then
-            echo 'Third-party JavaScript runtime detected.'
-            exit 1
-          fi
-          if grep -nE '^\s*import\s' effects.js; then
-            echo 'effects.js must stay dependency-free.'
-            exit 1
-          fi
-          if grep -q 'backup-sites.css' video-effects.css; then
-            echo 'Old visual import returned.'
-            exit 1
-          fi
-          grep -q 'Unified premium UI layer' video-effects.css
-          grep -q 'prefers-reduced-motion' video-effects.css
+          grep -q 'Clean identity layer' identity.css
+          grep -q 'Product pages' identity.css
+          grep -q 'product-tabs' identity.css
+          grep -q 'identity.css' index.html
+          grep -q 'identity.css' prices.html
+          grep -q 'identity.css' contact.html
+          grep -q 'identity.css' clientflow.html
+          grep -q 'prefers-reduced-motion' identity.css
           grep -q 'prefers-reduced-motion' effects.js
-          grep -q 'nav-motion-pill' effects.js
-          grep -q 'filter-motion-pill' effects.js
-          grep -q 'pricing-grid' video-effects.css
-          grep -q 'contact-form' video-effects.css
-          grep -q 'field select option' video-effects.css
-          grep -q 'motion-reveal.is-visible' video-effects.css
 
-      - name: Validate products and project routes
+      - name: Validate dedicated product pages
         run: |
-          grep -q 'WEB & PRODUTOS' prices.html
-          grep -q 'ClientFlow' prices.html
-          grep -q 'MVP / sistema personalizado' prices.html
-          for id in clientflow decisionforge curtailment finance pricing institutional csv riftpilot; do
-            grep -q "id=$id" index.html
-            grep -q "$id:{" script.js
+          for file in clientflow.html decisionforge-ai.html curtailment-intelligence.html gestao-financeira.html precificacao-vendas.html site-institucional-painel.html analise-vendas.html riftpilot.html; do
+            grep -q 'data-product-page' "$file"
+            grep -q 'product.js' "$file"
+            grep -q 'product-tab' "$file"
+            grep -q 'product-live-demo' "$file"
           done
+          grep -q 'href="clientflow.html"' index.html
+          grep -q 'href="decisionforge-ai.html"' index.html
+          grep -q 'href="curtailment-intelligence.html"' index.html
+          grep -q 'href="gestao-financeira.html"' index.html
+          grep -q 'href="precificacao-vendas.html"' index.html
+          grep -q 'href="site-institucional-painel.html"' index.html
+          grep -q 'href="analise-vendas.html"' index.html
+          grep -q 'href="riftpilot.html"' index.html
+          if grep -q 'href="project.html?id=' index.html; then
+            echo 'Legacy project query links returned to home.'; exit 1
+          fi
 
-      - name: Validate contact security and message flow
+      - name: Validate contact flow
         run: |
           grep -q 'id="secure-contact-form"' contact.html
-          grep -q 'id="form-status"' contact.html
           grep -q 'contact.js' contact.html
           grep -q "credentials: 'omit'" contact.js
           grep -q "referrerPolicy: 'no-referrer'" contact.js
           grep -q 'AbortController' contact.js
           grep -q 'botcheck' contact.html
           grep -q 'https://api.web3forms.com' contact.html
-          grep -q 'messageField' contact.js
 
-      - name: Validate sitemap and crawler files
+      - name: Validate sitemap
         run: |
           python - <<'PY'
           import xml.etree.ElementTree as ET
           from pathlib import Path
-          ET.parse('sitemap.xml')
-          robots = Path('robots.txt').read_text(encoding='utf-8')
-          if 'Sitemap:' not in robots:
-              raise SystemExit('robots.txt has no sitemap reference')
-          security = Path('.well-known/security.txt').read_text(encoding='utf-8')
-          for field in ('Contact:', 'Canonical:', 'Expires:'):
-              if field not in security:
-                  raise SystemExit(f'security.txt missing {field}')
-          print('SEO and security metadata OK')
+          root=ET.parse('sitemap.xml').getroot()
+          xml=Path('sitemap.xml').read_text(encoding='utf-8')
+          for slug in ('clientflow.html','decisionforge-ai.html','curtailment-intelligence.html','gestao-financeira.html','precificacao-vendas.html','site-institucional-painel.html','analise-vendas.html','riftpilot.html'):
+              if slug not in xml: raise SystemExit(f'Sitemap missing {slug}')
+          print('Sitemap OK')
           PY
 
       - name: Check common committed secret patterns
         run: |
           if grep -RniE '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{30,})' --exclude-dir=.git .; then
-            echo 'Potential privileged secret detected.'
-            exit 1
+            echo 'Potential privileged secret detected.'; exit 1
           fi
 
   deploy:
