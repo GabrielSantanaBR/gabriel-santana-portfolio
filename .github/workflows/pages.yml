@@ -34,9 +34,9 @@ jobs:
             index.html project.html prices.html contact.html thanks.html 404.html \
             clientflow.html decisionforge-ai.html curtailment-intelligence.html gestao-financeira.html \
             precificacao-vendas.html site-institucional-painel.html analise-vendas.html riftpilot.html \
-            styles.css video-effects.css portfolio-proof.css identity.css \
+            styles.css video-effects.css portfolio-proof.css identity.css pricing.css \
             script.js effects.js contact.js product.js robots.txt sitemap.xml SECURITY.md \
-            .well-known/security.txt assets/favicon.svg assets/portfolio-preview-v2.png; do
+            .well-known/security.txt assets/favicon.svg assets/portfolio-social-v4.svg; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
 
@@ -102,18 +102,26 @@ jobs:
           print('CSP and markup OK')
           PY
 
-      - name: Validate social preview
+      - name: Validate social metadata
         run: |
           python - <<'PY'
           from pathlib import Path
-          import struct
-          image=Path('assets/portfolio-preview-v2.png'); data=image.read_bytes()
-          if data[:8] != b'\x89PNG\r\n\x1a\n': raise SystemExit('Social preview is not PNG')
-          width,height=struct.unpack('>II',data[16:24])
-          if (width,height)!=(1200,630): raise SystemExit(f'Wrong social preview: {width}x{height}')
           home=Path('index.html').read_text(encoding='utf-8')
-          if 'assets/portfolio-preview-v2.png' not in home: raise SystemExit('Home OG image missing')
-          print('Social preview OK')
+          required=(
+            'assets/portfolio-social-v4.jpg',
+            'assets/portfolio-social-v4.png',
+            'og:image:secure_url',
+            'og:image:width',
+            'og:image:height',
+            'twitter:card',
+            'twitter:image',
+            'rel="image_src"'
+          )
+          for token in required:
+              if token not in home: raise SystemExit(f'Social metadata missing: {token}')
+          if 'portfolio-preview-v2.png' in home:
+              raise SystemExit('Old social preview URL still present in home')
+          print('Social metadata OK')
           PY
 
       - name: Validate clean identity system
@@ -123,6 +131,7 @@ jobs:
           grep -q 'product-tabs' identity.css
           grep -q 'identity.css' index.html
           grep -q 'identity.css' prices.html
+          grep -q 'pricing.css' prices.html
           grep -q 'identity.css' contact.html
           grep -q 'identity.css' clientflow.html
           grep -q 'prefers-reduced-motion' identity.css
@@ -163,7 +172,7 @@ jobs:
           python - <<'PY'
           import xml.etree.ElementTree as ET
           from pathlib import Path
-          root=ET.parse('sitemap.xml').getroot()
+          ET.parse('sitemap.xml')
           xml=Path('sitemap.xml').read_text(encoding='utf-8')
           for slug in ('clientflow.html','decisionforge-ai.html','curtailment-intelligence.html','gestao-financeira.html','precificacao-vendas.html','site-institucional-painel.html','analise-vendas.html','riftpilot.html'):
               if slug not in xml: raise SystemExit(f'Sitemap missing {slug}')
@@ -185,14 +194,42 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Build social preview assets
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq librsvg2-bin imagemagick
+          rsvg-convert -w 1200 -h 630 assets/portfolio-social-v4.svg -o assets/portfolio-social-v4.png
+          convert assets/portfolio-social-v4.png -strip -sampling-factor 4:2:0 -quality 88 assets/portfolio-social-v4.jpg
+          identify assets/portfolio-social-v4.png
+          identify assets/portfolio-social-v4.jpg
+
+      - name: Validate generated social previews
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import struct
+          png=Path('assets/portfolio-social-v4.png')
+          jpg=Path('assets/portfolio-social-v4.jpg')
+          data=png.read_bytes()
+          if data[:8] != b'\x89PNG\r\n\x1a\n': raise SystemExit('Generated PNG is invalid')
+          width,height=struct.unpack('>II',data[16:24])
+          if (width,height)!=(1200,630): raise SystemExit(f'Generated PNG has wrong dimensions: {width}x{height}')
+          if jpg.read_bytes()[:2] != b'\xff\xd8': raise SystemExit('Generated JPEG is invalid')
+          if png.stat().st_size < 15000 or jpg.stat().st_size < 15000: raise SystemExit('Generated social image is unexpectedly small')
+          print('Generated social previews OK')
+          PY
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - name: Upload static site
         uses: actions/upload-pages-artifact@v4
         with:
           path: .
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
