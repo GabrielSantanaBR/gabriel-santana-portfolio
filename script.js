@@ -4,7 +4,14 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  /* Pricing has an isolated layout so global portfolio CSS cannot distort it. */
+  /* Keep the legacy prices.html URL for compatibility, but present it as Services everywhere. */
+  document.querySelectorAll('a[href="prices.html"]').forEach((link) => {
+    if ((link.textContent || '').trim().toLowerCase() === 'preços') {
+      link.textContent = 'Serviços';
+    }
+  });
+
+  /* The services page has an isolated layout so global portfolio CSS cannot distort it. */
   if (document.querySelector('.pricing-page') && !document.querySelector('link[href="pricing.css"]')) {
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
