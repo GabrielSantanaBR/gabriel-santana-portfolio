@@ -137,6 +137,25 @@ jobs:
           grep -q 'prefers-reduced-motion' identity.css
           grep -q 'prefers-reduced-motion' effects.js
 
+      - name: Validate service-led commercial page
+        run: |
+          grep -q 'SERVIÇOS & SOLUÇÕES' prices.html
+          grep -q 'Agenda e CRM para Serviços' prices.html
+          grep -q 'Sistema de Gestão Financeira' prices.html
+          grep -q 'Sistema Personalizado / MVP' prices.html
+          grep -q 'Landing Page Comercial' prices.html
+          grep -q 'Site Institucional com Painel' prices.html
+          grep -q 'Dashboard & Análise de Dados' prices.html
+          grep -q 'Inteligência Artificial & Modelagem' prices.html
+          grep -q 'Você não precisa escolher um pacote' prices.html
+          if grep -q 'R\$' prices.html; then
+            echo 'Public prices returned to the services page.'; exit 1
+          fi
+          grep -q 'Investimento disponível' contact.html
+          if grep -q 'id="budget"[^>]*required' contact.html; then
+            echo 'Budget field must remain optional.'; exit 1
+          fi
+
       - name: Validate dedicated product pages
         run: |
           for file in clientflow.html decisionforge-ai.html curtailment-intelligence.html gestao-financeira.html precificacao-vendas.html site-institucional-painel.html analise-vendas.html riftpilot.html; do
