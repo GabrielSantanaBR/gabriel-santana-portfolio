@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Gabriel Santana — Dados, IA e Desenvolvimento</title>
+  <desc id="desc">Capa social do portfólio de Gabriel Santana, com identidade verde escura e destaques em sistemas, dados, IA e automação.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#040b08"/>
+      <stop offset="0.55" stop-color="#07150e"/>
+      <stop offset="1" stop-color="#0a2317"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b2f8d4"/>
+      <stop offset="0.45" stop-color="#69e2a7"/>
+      <stop offset="1" stop-color="#35b97c"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d2418"/>
+      <stop offset="1" stop-color="#08160f"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#48df98" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#48df98" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0H0V44" fill="none" stroke="#86efba" stroke-opacity=".035" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".35"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1085" cy="64" r="310" fill="url(#glow)"/>
+  <circle cx="210" cy="660" r="260" fill="url(#glow)" opacity=".28"/>
+
+  <!-- Safe-zone content: all critical information stays well inside common social crops -->
+  <g font-family="Arial, Helvetica, sans-serif">
+    <g transform="translate(68 58)">
+      <rect width="72" height="72" rx="20" fill="#0b2116" stroke="#6ce4a9" stroke-opacity=".55" stroke-width="1.5"/>
+      <text x="36" y="47" text-anchor="middle" fill="#f4fff8" font-size="28" font-weight="800">GS</text>
+      <circle cx="57" cy="17" r="5" fill="#69e2a7"/>
+      <text x="92" y="42" fill="#72e4aa" font-size="13" font-weight="800" letter-spacing="4">PORTFÓLIO</text>
+    </g>
+
+    <text x="68" y="235" fill="#f5fbf7" font-size="64" font-weight="800" letter-spacing="-2.2">Gabriel Santana</text>
+    <text x="68" y="294" fill="url(#accent)" font-size="34" font-weight="750" letter-spacing="-.8">Dados, IA e Desenvolvimento</text>
+    <text x="68" y="350" fill="#a3b6ac" font-size="20">Sistemas, automações e inteligência de dados</text>
+    <text x="68" y="382" fill="#a3b6ac" font-size="20">transformados em soluções digitais.</text>
+
+    <g transform="translate(68 444)" font-size="14" font-weight="700">
+      <g><rect width="105" height="39" rx="11" fill="#0b1d14" stroke="#315d46"/><text x="52.5" y="25" text-anchor="middle" fill="#a4edc7">Python</text></g>
+      <g transform="translate(117 0)"><rect width="105" height="39" rx="11" fill="#0b1d14" stroke="#315d46"/><text x="52.5" y="25" text-anchor="middle" fill="#a4edc7">FastAPI</text></g>
+      <g transform="translate(234 0)"><rect width="105" height="39" rx="11" fill="#0b1d14" stroke="#315d46"/><text x="52.5" y="25" text-anchor="middle" fill="#a4edc7">Django</text></g>
+      <g transform="translate(351 0)"><rect width="80" height="39" rx="11" fill="#0b1d14" stroke="#315d46"/><text x="40" y="25" text-anchor="middle" fill="#a4edc7">IA</text></g>
+    </g>
+
+    <text x="68" y="554" fill="#5f7f6e" font-size="13" letter-spacing="1">gabrielsantanabr.github.io/gabriel-santana-portfolio</text>
+  </g>
+
+  <g transform="translate(690 92)" filter="url(#shadow)" font-family="Arial, Helvetica, sans-serif">
+    <rect width="438" height="434" rx="30" fill="url(#card)" stroke="#61db9f" stroke-opacity=".34"/>
+    <text x="28" y="48" fill="#70e4aa" font-size="14" font-weight="800" letter-spacing="3">PROJETOS EM DESTAQUE</text>
+
+    <g transform="translate(24 76)">
+      <rect width="390" height="92" rx="18" fill="#0a1b12" stroke="#2e6248"/>
+      <rect x="16" y="18" width="58" height="58" rx="16" fill="#123824" stroke="#2f7651"/>
+      <text x="45" y="55" text-anchor="middle" fill="#70e4aa" font-size="20" font-weight="800">DF</text>
+      <text x="92" y="38" fill="#f2faf5" font-size="18" font-weight="750">Análise Inteligente de Dados</text>
+      <text x="92" y="64" fill="#82988c" font-size="12">DecisionForge AI • ML • Forecasting</text>
+      <circle cx="360" cy="46" r="5" fill="#6ce4aa"/>
+    </g>
+
+    <g transform="translate(24 181)">
+      <rect width="390" height="92" rx="18" fill="#0a1b12" stroke="#28553f"/>
+      <rect x="16" y="18" width="58" height="58" rx="16" fill="#123824" stroke="#2f7651"/>
+      <text x="45" y="55" text-anchor="middle" fill="#70e4aa" font-size="20" font-weight="800">CF</text>
+      <text x="92" y="38" fill="#f2faf5" font-size="18" font-weight="750">Agenda e CRM para Serviços</text>
+      <text x="92" y="64" fill="#82988c" font-size="12">ClientFlow • Agenda • Atendimento</text>
+      <rect x="325" y="34" width="48" height="24" rx="12" fill="#113523"/>
+      <text x="349" y="50" text-anchor="middle" fill="#72e4aa" font-size="8" font-weight="800">PRODUTO</text>
+    </g>
+
+    <g transform="translate(24 286)">
+      <rect width="390" height="92" rx="18" fill="#0a1b12" stroke="#28553f"/>
+      <rect x="16" y="18" width="58" height="58" rx="16" fill="#123824" stroke="#2f7651"/>
+      <text x="45" y="55" text-anchor="middle" fill="#70e4aa" font-size="20" font-weight="800">FM</text>
+      <text x="92" y="38" fill="#f2faf5" font-size="18" font-weight="750">Sistema de Gestão Financeira</text>
+      <text x="92" y="64" fill="#82988c" font-size="12">Django • PostgreSQL • Relatórios</text>
+      <path d="M334 61l12-11 11 6 18-22" fill="none" stroke="#70e4aa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+</svg>
