@@ -1,7 +1,9 @@
-name: Deploy portfolio to GitHub Pages
+name: Validate and deploy DataForge
 
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -11,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: dataforge-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -23,20 +25,15 @@ jobs:
 
       - name: Validate JavaScript syntax
         run: |
-          node --check script.js
-          node --check effects.js
-          node --check contact.js
-          node --check product.js
+          find . -maxdepth 1 -type f -name '*.js' -print0 | xargs -0 -n1 node --check
 
-      - name: Validate required files
+      - name: Validate required DataForge files
         run: |
           for file in \
-            index.html project.html prices.html contact.html thanks.html 404.html \
-            clientflow.html decisionforge-ai.html curtailment-intelligence.html gestao-financeira.html \
-            precificacao-vendas.html site-institucional-painel.html analise-vendas.html riftpilot.html \
-            styles.css video-effects.css portfolio-proof.css identity.css pricing.css \
-            script.js effects.js contact.js product.js robots.txt sitemap.xml SECURITY.md \
-            .well-known/security.txt assets/favicon.svg assets/portfolio-social-v4.svg; do
+            index.html prices.html contact.html thanks.html 404.html \
+            company.css company-pages.css company.js contact.js \
+            robots.txt sitemap.xml SECURITY.md \
+            assets/dataforge-d6.svg; do
             test -f "$file" || { echo "Missing required file: $file"; exit 1; }
           done
 
@@ -51,7 +48,10 @@ jobs:
 
           class Audit(HTMLParser):
               def __init__(self, source):
-                  super().__init__(); self.source = source; self.ids = set()
+                  super().__init__()
+                  self.source = source
+                  self.ids = set()
+
               def handle_starttag(self, tag, attrs):
                   data = dict(attrs)
                   element_id = data.get('id')
@@ -59,16 +59,18 @@ jobs:
                       if element_id in self.ids:
                           duplicates.append(f'{self.source}: duplicate id={element_id}')
                       self.ids.add(element_id)
-                  for key in ('href','src'):
+
+                  for key in ('href', 'src'):
                       value = data.get(key)
-                      if not value or value.startswith(('http://','https://','#','mailto:','tel:','data:')):
+                      if not value or value.startswith(('http://', 'https://', '#', 'mailto:', 'tel:', 'data:')):
                           continue
                       path = urlsplit(value).path
                       if path and not (self.source.parent / path).resolve().exists():
-                          broken.append(f'{self.source}: {value}')
+                          broken.append(f'{self.source}: broken {key}={value}')
 
           for html in Path('.').glob('*.html'):
-              parser = Audit(html); parser.feed(html.read_text(encoding='utf-8'))
+              parser = Audit(html)
+              parser.feed(html.read_text(encoding='utf-8'))
 
           errors = broken + duplicates
           if errors:
@@ -81,121 +83,186 @@ jobs:
           python - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path
-          failures=[]
+
+          failures = []
+
           class Audit(HTMLParser):
-              def __init__(self, source): super().__init__(); self.source=source; self.csp=None
+              def __init__(self, source):
+                  super().__init__()
+                  self.source = source
+                  self.csp = None
+
               def handle_starttag(self, tag, attrs):
-                  data=dict(attrs)
-                  if 'style' in data: failures.append(f'{self.source}: inline style')
-                  if tag=='script' and not data.get('src'): failures.append(f'{self.source}: inline script')
-                  if tag=='a' and data.get('target')=='_blank':
-                      rel=set((data.get('rel') or '').split())
-                      if not {'noopener','noreferrer'} <= rel:
+                  data = dict(attrs)
+                  if 'style' in data:
+                      failures.append(f'{self.source}: inline style')
+                  if tag == 'script' and not data.get('src'):
+                      failures.append(f'{self.source}: inline script')
+                  if tag == 'a' and data.get('target') == '_blank':
+                      rel = set((data.get('rel') or '').split())
+                      if not {'noopener', 'noreferrer'} <= rel:
                           failures.append(f'{self.source}: unsafe target=_blank')
-                  if tag=='meta' and (data.get('http-equiv') or '').lower()=='content-security-policy':
-                      self.csp=data.get('content','')
+                  if tag == 'meta' and (data.get('http-equiv') or '').lower() == 'content-security-policy':
+                      self.csp = data.get('content', '')
+
           for path in Path('.').glob('*.html'):
-              audit=Audit(path); audit.feed(path.read_text(encoding='utf-8')); csp=audit.csp or ''
-              for directive in ("script-src 'self'","style-src 'self'","object-src 'none'","base-uri 'none'","frame-src 'none'",'upgrade-insecure-requests'):
-                  if directive not in csp: failures.append(f'{path}: CSP missing {directive}')
-          if failures: raise SystemExit('Security markup validation failed:\n'+'\n'.join(failures))
+              audit = Audit(path)
+              audit.feed(path.read_text(encoding='utf-8'))
+              csp = audit.csp or ''
+              for directive in (
+                  "script-src 'self'",
+                  "style-src 'self'",
+                  "object-src 'none'",
+                  "base-uri 'none'",
+                  "frame-src 'none'",
+                  'upgrade-insecure-requests',
+              ):
+                  if directive not in csp:
+                      failures.append(f'{path}: CSP missing {directive}')
+
+          if failures:
+              raise SystemExit('Security markup validation failed:\n' + '\n'.join(failures))
           print('CSP and markup OK')
           PY
 
-      - name: Validate social metadata
+      - name: Validate DataForge identity
+        run: |
+          for file in index.html prices.html contact.html thanks.html; do
+            grep -q 'DataForge' "$file"
+            grep -q 'assets/dataforge-d6.svg' "$file"
+            grep -q 'company.css' "$file"
+          done
+          grep -q 'Software · Data · AI' index.html
+          grep -q 'Forjamos' index.html
+          grep -q 'D6' assets/dataforge-d6.svg
+          grep -q 'prefers-reduced-motion' company.css
+          grep -q 'repo-filter' company.js
+          grep -q 'IntersectionObserver' company.js
+
+      - name: Validate public project repertoire
         run: |
           python - <<'PY'
           from pathlib import Path
-          home=Path('index.html').read_text(encoding='utf-8')
-          required=(
-            'assets/portfolio-social-v4.jpg',
-            'assets/portfolio-social-v4.png',
-            'og:image:secure_url',
-            'og:image:width',
-            'og:image:height',
-            'twitter:card',
-            'twitter:image',
-            'rel="image_src"'
+          import re
+
+          home = Path('index.html').read_text(encoding='utf-8')
+          expected = (
+              'decisionforge-ai',
+              'curtailment-intelligence',
+              'nossas-delicias-site',
+              'projeto-petshop',
+              'coffee_five_site',
+              'projeto_academia',
+              'projeto-barbearia',
+              'clientflow',
+              'finance-manager',
+              'institutional-site-template',
+              'hotmart_sites',
+              'bakery-manager',
+              'csv-sales-analyzer',
+              'url-shortener-api',
+              'riftpilot',
+              'projeto_excel_DIO',
+              'Pluvia',
+              'Sicma-JAVA',
+              'Conta_Bancaria',
+              'Traducao_R_para_Python_UFF',
+              'pequenos_projetos',
+              'lab-natty-or-not',
+              'dataforge-portfolio',
+              'project-nomad',
+              'LibreSprite',
           )
-          for token in required:
-              if token not in home: raise SystemExit(f'Social metadata missing: {token}')
-          if 'portfolio-preview-v2.png' in home:
-              raise SystemExit('Old social preview URL still present in home')
-          print('Social metadata OK')
+
+          for repo in expected:
+              url = f'https://github.com/GabrielSantanaBR/{repo}'
+              if url not in home:
+                  raise SystemExit(f'Public project missing from repertoire: {repo}')
+
+          count = len(re.findall(r'class="repo-item"', home))
+          if count != len(expected):
+              raise SystemExit(f'Expected {len(expected)} repertoire rows, found {count}')
+
+          forks = len(re.findall(r'data-kind="fork"', home))
+          if forks != 2:
+              raise SystemExit(f'Expected 2 explicitly marked forks, found {forks}')
+
+          if 'GabrielSantanaBR/GabrielSantanaBR' in home:
+              raise SystemExit('Profile repository must not be presented as a project case')
+
+          print(f'Public repertoire OK: {count} projects, {forks} forks identified')
           PY
 
-      - name: Validate clean identity system
-        run: |
-          grep -q 'Clean identity layer' identity.css
-          grep -q 'Product pages' identity.css
-          grep -q 'product-tabs' identity.css
-          grep -q 'identity.css' index.html
-          grep -q 'identity.css' prices.html
-          grep -q 'pricing.css' prices.html
-          grep -q 'identity.css' contact.html
-          grep -q 'identity.css' clientflow.html
-          grep -q 'prefers-reduced-motion' identity.css
-          grep -q 'prefers-reduced-motion' effects.js
-
-      - name: Validate service-led commercial page
+      - name: Validate service catalog and contact mapping
         run: |
           grep -q 'SERVIÇOS & SOLUÇÕES' prices.html
-          grep -q 'Agenda e CRM para Serviços' prices.html
+          grep -q 'Agenda & CRM para Serviços' prices.html
           grep -q 'Sistema de Gestão Financeira' prices.html
           grep -q 'Sistema Personalizado / MVP' prices.html
-          grep -q 'Landing Page Comercial' prices.html
-          grep -q 'Site Institucional com Painel' prices.html
+          grep -q 'Catálogo, pedidos & ecommerce' prices.html
           grep -q 'Dashboard & Análise de Dados' prices.html
-          grep -q 'Inteligência Artificial & Modelagem' prices.html
-          grep -q 'Você não precisa escolher um pacote' prices.html
-          if grep -q 'R\$' prices.html; then
-            echo 'Public prices returned to the services page.'; exit 1
-          fi
-          grep -q 'Investimento disponível' contact.html
-          if grep -q 'id="budget"[^>]*required' contact.html; then
-            echo 'Budget field must remain optional.'; exit 1
-          fi
+          grep -q 'Machine Learning & IA Aplicada' prices.html
+          grep -q 'Deploy & preparação para produção' prices.html
+          grep -q 'Revisão técnica & segurança' prices.html
+          grep -q 'Analytics & instrumentação' prices.html
 
-      - name: Validate dedicated product pages
-        run: |
-          for file in clientflow.html decisionforge-ai.html curtailment-intelligence.html gestao-financeira.html precificacao-vendas.html site-institucional-painel.html analise-vendas.html riftpilot.html; do
-            grep -q 'data-product-page' "$file"
-            grep -q 'product.js' "$file"
-            grep -q 'product-tab' "$file"
-            grep -q 'product-live-demo' "$file"
-          done
-          grep -q 'href="clientflow.html"' index.html
-          grep -q 'href="decisionforge-ai.html"' index.html
-          grep -q 'href="curtailment-intelligence.html"' index.html
-          grep -q 'href="gestao-financeira.html"' index.html
-          grep -q 'href="precificacao-vendas.html"' index.html
-          grep -q 'href="site-institucional-painel.html"' index.html
-          grep -q 'href="analise-vendas.html"' index.html
-          grep -q 'href="riftpilot.html"' index.html
-          if grep -q 'href="project.html?id=' index.html; then
-            echo 'Legacy project query links returned to home.'; exit 1
-          fi
+          python - <<'PY'
+          from pathlib import Path
 
-      - name: Validate contact flow
-        run: |
+          prices = Path('prices.html').read_text(encoding='utf-8')
+          contact = Path('contact.js').read_text(encoding='utf-8')
+          keys = (
+              'clientflow', 'finance', 'custom', 'vertical', 'landing', 'site',
+              'site-panel', 'commerce', 'spreadsheet', 'data', 'ai', 'api',
+              'deploy', 'security', 'analytics',
+          )
+          for key in keys:
+              if f'?service={key}' not in prices:
+                  raise SystemExit(f'Service CTA missing: {key}')
+              token = f"{key}:" if '-' not in key else f"'{key}':"
+              if token not in contact:
+                  raise SystemExit(f'contact.js mapping missing: {key}')
+          print('Service CTAs and contact mappings OK')
+          PY
+
           grep -q 'id="secure-contact-form"' contact.html
-          grep -q 'contact.js' contact.html
           grep -q "credentials: 'omit'" contact.js
           grep -q "referrerPolicy: 'no-referrer'" contact.js
           grep -q 'AbortController' contact.js
           grep -q 'botcheck' contact.html
           grep -q 'https://api.web3forms.com' contact.html
+          if grep -q 'id="budget"[^>]*required' contact.html; then
+            echo 'Budget field must remain optional.'; exit 1
+          fi
 
-      - name: Validate sitemap
+      - name: Validate DataForge SEO paths
         run: |
           python - <<'PY'
           import xml.etree.ElementTree as ET
           from pathlib import Path
-          ET.parse('sitemap.xml')
-          xml=Path('sitemap.xml').read_text(encoding='utf-8')
-          for slug in ('clientflow.html','decisionforge-ai.html','curtailment-intelligence.html','gestao-financeira.html','precificacao-vendas.html','site-institucional-painel.html','analise-vendas.html','riftpilot.html'):
-              if slug not in xml: raise SystemExit(f'Sitemap missing {slug}')
-          print('Sitemap OK')
+
+          base = 'https://gabrielsantanabr.github.io/dataforge-portfolio/'
+          home = Path('index.html').read_text(encoding='utf-8')
+          prices = Path('prices.html').read_text(encoding='utf-8')
+          contact = Path('contact.html').read_text(encoding='utf-8')
+          robots = Path('robots.txt').read_text(encoding='utf-8')
+
+          if f'rel="canonical" href="{base}"' not in home:
+              raise SystemExit('Home canonical is not DataForge Pages URL')
+          if f'rel="canonical" href="{base}prices.html"' not in prices:
+              raise SystemExit('Services canonical is not DataForge Pages URL')
+          if f'rel="canonical" href="{base}contact.html"' not in contact:
+              raise SystemExit('Contact canonical is not DataForge Pages URL')
+          if f'Sitemap: {base}sitemap.xml' not in robots:
+              raise SystemExit('robots.txt points to the wrong sitemap')
+
+          tree = ET.parse('sitemap.xml')
+          ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          locs = {node.text for node in tree.findall('.//sm:loc', ns)}
+          expected = {base, f'{base}prices.html', f'{base}contact.html'}
+          if locs != expected:
+              raise SystemExit(f'Unexpected sitemap URLs: {sorted(locs)}')
+          print('SEO paths OK')
           PY
 
       - name: Check common committed secret patterns
@@ -205,6 +272,7 @@ jobs:
           fi
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: validate
     environment:
       name: github-pages
@@ -213,31 +281,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Build social preview assets
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq librsvg2-bin imagemagick
-          rsvg-convert -w 1200 -h 630 assets/portfolio-social-v4.svg -o assets/portfolio-social-v4.png
-          convert assets/portfolio-social-v4.png -strip -sampling-factor 4:2:0 -quality 88 assets/portfolio-social-v4.jpg
-          identify assets/portfolio-social-v4.png
-          identify assets/portfolio-social-v4.jpg
-
-      - name: Validate generated social previews
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import struct
-          png=Path('assets/portfolio-social-v4.png')
-          jpg=Path('assets/portfolio-social-v4.jpg')
-          data=png.read_bytes()
-          if data[:8] != b'\x89PNG\r\n\x1a\n': raise SystemExit('Generated PNG is invalid')
-          width,height=struct.unpack('>II',data[16:24])
-          if (width,height)!=(1200,630): raise SystemExit(f'Generated PNG has wrong dimensions: {width}x{height}')
-          if jpg.read_bytes()[:2] != b'\xff\xd8': raise SystemExit('Generated JPEG is invalid')
-          if png.stat().st_size < 15000 or jpg.stat().st_size < 15000: raise SystemExit('Generated social image is unexpectedly small')
-          print('Generated social previews OK')
-          PY
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

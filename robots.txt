@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gabrielsantanabr.github.io/gabriel-santana-portfolio/sitemap.xml
+Sitemap: https://gabrielsantanabr.github.io/dataforge-portfolio/sitemap.xml

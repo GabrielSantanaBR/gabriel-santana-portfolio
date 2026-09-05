@@ -13,15 +13,20 @@
 
   const serviceMap = Object.freeze({
     clientflow: 'Agenda / CRM de clientes',
+    finance: 'Sistema financeiro',
+    custom: 'Sistema personalizado / MVP',
+    vertical: 'Solução vertical',
     landing: 'Landing page comercial',
     site: 'Site institucional',
     'site-panel': 'Site com painel interno',
-    finance: 'Sistema financeiro',
+    commerce: 'Catálogo / ecommerce / pedidos',
     spreadsheet: 'Planilha inteligente / automação',
     data: 'Dashboard / análise de dados',
-    ai: 'IA / análise inteligente',
+    ai: 'IA / machine learning',
     api: 'API / integração',
-    custom: 'MVP / sistema personalizado',
+    deploy: 'Deploy / produção',
+    security: 'Segurança / revisão técnica',
+    analytics: 'Analytics / métricas',
     other: 'Outro projeto'
   });
 
@@ -46,8 +51,8 @@
   const requestedPlan = cleanText(params.get('plan'), 60);
   if (messageField && (requestedProject || requestedPlan)) {
     const projectText = requestedProject ? `Tenho interesse em ${requestedProject}` : 'Tenho interesse neste serviço';
-    const planText = requestedPlan ? `, usando o pacote ${requestedPlan} como referência inicial` : '';
-    messageField.value = `${projectText}${planText}. Entendo que o valor exibido é apenas uma base e pode mudar conforme o escopo final. `;
+    const planText = requestedPlan ? `, usando ${requestedPlan} como referência inicial` : '';
+    messageField.value = `${projectText}${planText}. Gostaria de entender um escopo adequado para o cenário. `;
   }
 
   const contactConfig = Object.freeze({
@@ -103,7 +108,7 @@
     validateContact();
     if (!form.reportValidity()) return;
 
-    const lastAttempt = Number(safeStorageGet('portfolio-contact-attempt') || 0);
+    const lastAttempt = Number(safeStorageGet('dataforge-contact-attempt') || 0);
     if (Date.now() - lastAttempt < 15000) {
       status.textContent = 'Aguarde alguns segundos antes de tentar enviar novamente.';
       status.classList.add('form-error');
@@ -121,7 +126,7 @@
     }
     messageField.setCustomValidity('');
 
-    safeStorageSet('portfolio-contact-attempt', String(Date.now()));
+    safeStorageSet('dataforge-contact-attempt', String(Date.now()));
     const originalLabel = submitButton.innerHTML;
     submitButton.disabled = true;
     submitButton.textContent = 'Enviando...';

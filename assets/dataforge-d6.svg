@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">DataForge D6</title>
+  <desc id="desc">Símbolo monocromático D6 com chamas estilizadas</desc>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="#080808" stroke="#f5f5f5" stroke-width="4"/>
+  <path d="M31 31h22c24 0 39 13 39 34 0 22-15 35-39 35H31V31Zm17 16v37h7c12 0 19-7 19-19 0-11-7-18-19-18h-7Z" fill="#f5f5f5"/>
+  <path d="M76 77c0-15 9-27 25-30l4 14c-8 1-13 5-15 10 3-2 7-3 11-3 11 0 19 7 19 17 0 11-9 19-21 19-14 0-23-10-23-27Zm16 8c0 5 3 8 8 8 4 0 7-3 7-7s-3-7-8-7c-3 0-5 1-7 2v4Z" fill="#f5f5f5"/>
+  <path d="M72 36c8-7 10-16 7-25 10 7 15 15 13 25 7-6 9-12 8-19 9 9 12 19 7 30-5-7-12-11-21-12-5-1-10 0-14 1Z" fill="#f5f5f5"/>
+  <path d="M84 31c3-4 4-8 3-12 4 4 6 8 4 13l-7-1Z" fill="#080808"/>
+</svg>
